@@ -19,6 +19,46 @@ input,select,textarea{background:#100e20;border-color:#393254}.pill{background:#
 .income-bar{background:linear-gradient(180deg,#67e8f9,#8b5cf6)}.chart-legend i{background:#67e8f9}
 
 .tradeview-launch{margin-bottom:16px;background:radial-gradient(ellipse at 100% 0%,#253d66 0,transparent 50%),linear-gradient(135deg,#17152d,#101a2a);border-color:#3a4d70}.tradeview-brand{display:flex;align-items:center;gap:13px}.tradeview-brand h2{font-size:23px;margin:4px 0}.tradeview-brand p{margin:0}.tradeview-mark{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(145deg,#67e8f9,#a78bfa);color:#0b1020;font-size:27px;font-weight:900;font-style:italic}.trade-now{margin-top:17px;display:flex;align-items:center;justify-content:space-between;gap:12px;text-decoration:none;background:linear-gradient(110deg,#67e8f9,#a78bfa);color:#0b1020;padding:14px 17px;border-radius:13px;font-weight:850;box-shadow:0 8px 28px #67e8f926;transition:transform .16s,filter .16s}.trade-now:hover{transform:translateY(-2px);filter:brightness(1.06)}.trade-now span:last-child{font-size:20px}
+
+/* Refined studio dashboard — warm ivory, ink and electric blue */
+:root{color-scheme:light;--bg:#f3f5fa;--panel:#ffffff;--line:#e1e6f0;--muted:#68748b;--text:#151c2d;--lime:#315cf5;--blue:#7c8cff;--red:#d9485f}
+body{background:radial-gradient(ellipse at 85% -10%,#dce5ff 0,transparent 35%),radial-gradient(ellipse at 0% 30%,#e5edff 0,transparent 32%),#f3f5fa;color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.wrap{max-width:1180px;padding:24px 18px 64px}
+.top{padding:5px 2px}.eyebrow{color:#315cf5;letter-spacing:.16em;font-size:10px}
+.hero{position:relative;overflow:hidden;margin:22px 0 20px;padding:30px;border-radius:24px;background:linear-gradient(120deg,#111a32 0%,#202e59 62%,#315cf5 140%);color:#fff;align-items:center;box-shadow:0 18px 45px #243a7720}
+.hero:after{content:"";width:230px;height:230px;border:1px solid #ffffff24;border-radius:50%;position:absolute;right:-65px;top:-85px;box-shadow:0 0 0 28px #ffffff08,0 0 0 58px #ffffff06;pointer-events:none}
+.hero h1{font-size:clamp(34px,5vw,56px);line-height:1.02;max-width:650px;letter-spacing:-.055em;margin:12px 0}
+.hero .eyebrow{color:#9db5ff}.hero p{color:#d3daf0}.hero .pill{background:#ffffff18;color:#edf1ff;border:1px solid #ffffff22}
+.card,.modal{background:#fff;border:1px solid #e4e8f1;border-radius:20px;box-shadow:0 6px 22px #1e2b4d08}
+.card{padding:20px}.sectionhead h2{color:#171e31;letter-spacing:-.025em}
+.grid{gap:13px}.grid>.card{position:relative;overflow:hidden;transition:transform .18s,box-shadow .18s,border-color .18s}.grid>.card:hover{transform:translateY(-2px);box-shadow:0 12px 28px #1e2b4d10;border-color:#cbd6f5}
+.metric-label{color:#78839a;font-size:10px;font-weight:800;letter-spacing:.1em}.metric{color:#17213a;font-size:30px}.muted,.date,.hint,.sub{color:#748097}.pill{background:#edf1ff;color:#3151c9}
+button{background:#f1f4fb;color:#29334b;border-color:#dfe5f1;border-radius:12px;transition:all .16s}
+button:hover{filter:none;background:#e7edff;border-color:#bdcbff}
+button.primary,.tabs button.active{background:linear-gradient(120deg,#315cf5,#5978ff);color:white;border-color:#315cf5;box-shadow:0 5px 14px #315cf526}
+.tabs{top:8px;background:#f3f5faeF;border:1px solid #e1e6f0;border-radius:16px;padding:8px;box-shadow:0 8px 22px #1e2b4d0b;backdrop-filter:blur(18px)}
+.tabs button{border-color:transparent;background:transparent;color:#69758d}.tabs button.active{color:#fff}
+.orbit-section{padding:22px;background:linear-gradient(140deg,#fff,#f7f9ff);border:1px solid #e0e6f5;border-radius:24px;box-shadow:0 8px 28px #26375b08}
+.orbit-item{background:#fff;border-color:#e4e9f4;border-radius:18px;color:#26314b;padding:16px 5px;box-shadow:0 4px 12px #24365b08;transition:transform .2s,border-color .2s,box-shadow .2s}
+.orbit-item:hover{transform:translateY(-3px);border-color:#a9bbff;box-shadow:0 12px 24px #315cf51b}
+.orbit-ring{width:78px;height:78px;background:radial-gradient(circle at center,#fff 61%,transparent 63%),conic-gradient(var(--ring) var(--progress,0%),#e9edf7 0)}
+.orbit-ring span{font-size:17px;color:var(--ring)}.orbit-item strong{font-size:12px;color:#303b55}
+.progress{background:#e9edf6}.progress span{background:linear-gradient(90deg,#315cf5,#8c9cff)}
+.walletcard{background:linear-gradient(120deg,#111a32,#253c7a 72%,#315cf5);border:0;color:#fff;box-shadow:0 15px 32px #243a7720}.walletcard .muted,.walletcard .hint{color:#d1daf7}
+.walletbalance{color:#fff}.walletactions button{background:#ffffff15;color:#fff;border-color:#ffffff30}
+input,select,textarea{background:#f8faff;color:#19223a;border-color:#dce3f0;border-radius:12px}
+input:focus,select:focus,textarea:focus{outline:2px solid #315cf533;border-color:#7190ff}
+.field label{color:#64718b}.item{border-color:#e5e9f2;background:#fcfdff;border-radius:14px}.item small{color:#7a859a}.item input[type=checkbox]{accent-color:#315cf5}
+.empty{border-color:#d9e0ef;color:#7a859a;background:#fafbff}.notice{background:#e9f8f4;color:#176b5b}.notice.error{background:#fff0f1;color:#a92d43}
+.modalback{background:#121a2bb8;backdrop-filter:blur(8px)}.modal{box-shadow:0 24px 80px #10182d35}
+.income-chart{border-bottom-color:#dce3f0}.income-month strong{color:#44516c}.income-month small{color:#7d88a0}.income-bar{background:linear-gradient(180deg,#8198ff,#315cf5)}.chart-legend{color:#65728a}.chart-legend i{background:#315cf5}
+.sparkbars span{background:linear-gradient(180deg,#8da1ff,#315cf5)}
+.tradeview-launch{background:radial-gradient(ellipse at 100% 0%,#dce5ff 0,transparent 50%),linear-gradient(135deg,#fff,#f4f7ff);border-color:#dce5fa}
+.tradeview-brand h2{color:#17213a}.tradeview-mark{background:linear-gradient(145deg,#315cf5,#9caeff);color:#fff}.trade-now{background:linear-gradient(110deg,#315cf5,#718aff);color:#fff;box-shadow:0 8px 24px #315cf52b}
+.footer{color:#8a94a8}
+.auth{box-shadow:0 20px 70px #20335d14;border-color:#e0e6f3}
+@media(max-width:760px){.hero{padding:23px 20px;border-radius:21px;margin-top:18px}.orbit-section{padding:15px}.orbit-ring{width:68px;height:68px}.tabs{border-radius:14px}.card{padding:16px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}}
 </style></head><body>
 <div id="authscreen" class="card auth"><div class="eyebrow">PERSONAL OPERATING SYSTEM</div><h1 style="margin-bottom:4px">Daily Command Center</h1><p class="muted">Sign in to keep your tasks, money and trading journal private.</p><div id="authmsg"></div><form id="authform"><div class="field"><label>Email</label><input id="email" type="email" autocomplete="email" required></div><div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password" minlength="6" required></div><button class="primary" type="submit" id="authsubmit">Sign in</button><button type="button" id="toggleauth">Create account</button></form><p class="muted">Your records are stored in the separate Daily Command Center database. Never share your password.</p></div>
 <main id="app" class="wrap hidden"><header class="top"><div class="eyebrow">PERSONAL OPERATING SYSTEM</div><div class="rowline"><span class="date" id="today"></span><button id="logout">Sign out</button></div></header>

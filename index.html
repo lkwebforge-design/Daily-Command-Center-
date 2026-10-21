@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Daily Command Center</title>
+<style>
+:root{color-scheme:dark;--bg:#0a0d14;--panel:#131925;--line:#283244;--muted:#98a5ba;--text:#f3f6fc;--lime:#c7f36b;--blue:#83a9ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% 0%,#1c2a3e 0,transparent 42%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,sans-serif}.wrap{max-width:1120px;margin:auto;padding:28px 20px 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}.eyebrow{color:var(--lime);font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}.date{color:var(--muted);font-size:13px}.hero{margin:34px 0 26px;display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap}.hero h1{font-size:clamp(32px,6vw,56px);line-height:1.02;letter-spacing:-.05em;margin:10px 0}.hero p{color:var(--muted);margin:0}.tag{border:1px solid #3b4b60;border-radius:99px;padding:9px 13px;color:#dce5f5;font-size:12px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}.card{background:linear-gradient(145deg,#171f2d,#111722);border:1px solid var(--line);border-radius:18px;padding:19px;min-width:0}.metric-label{font-size:12px;color:var(--muted)}.metric{font-size:28px;letter-spacing:-.04em;font-weight:750;margin:9px 0 2px}.hint{font-size:12px;color:#b4c0d1}.section{margin-top:24px}.sectionhead{display:flex;justify-content:space-between;align-items:center;margin:0 0 12px;gap:12px}.sectionhead h2{font-size:18px;margin:0;letter-spacing:-.02em}.sub{font-size:12px;color:var(--muted)}.cols{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}.progress{height:7px;background:#293346;border-radius:99px;overflow:hidden;margin:14px 0 8px}.progress span{display:block;height:100%;width:0;background:var(--lime);border-radius:99px}.track{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid #283244;gap:10px}.track:last-child{border-bottom:0}.dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:9px}.study{background:var(--blue)}.forge{background:#d2a2ff}.trade{background:var(--lime)}.personal{background:#ffb37e}.pill{font-size:11px;padding:5px 8px;border-radius:99px;background:#202b3b;color:#d6dfed}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}button{border:1px solid #3a4659;background:#202a39;color:var(--text);padding:10px 12px;border-radius:10px;font-weight:650;cursor:pointer}button.primary{background:var(--lime);border-color:var(--lime);color:#11170a}.note{color:var(--muted);font-size:12px;margin-top:16px}.empty{border:1px dashed #3b4658;border-radius:12px;padding:17px;color:var(--muted);font-size:13px}.footer{margin-top:30px;color:#65748b;font-size:11px;text-align:center}@media(max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cols{grid-template-columns:1fr}.wrap{padding:22px 14px 44px}.metric{font-size:25px}}@media(max-width:380px){.grid{grid-template-columns:1fr 1fr}.card{padding:14px}}
+</style>
+</head>
+<body><main class="wrap">
+<header class="top"><div class="eyebrow">PERSONAL OPERATING SYSTEM</div><div class="date" id="today"></div></header>
+<section class="hero"><div><div class="eyebrow">DAILY COMMAND CENTER / 001</div><h1>Own your day.</h1><p>Study with intent. Build steadily. Trade by your rules.</p></div><div class="tag">● DAILY OVERVIEW</div></section>
+<section class="grid">
+<div class="card"><div class="metric-label">STUDY PROGRESS</div><div class="metric" id="study">0%</div><div class="hint">Daily target completion</div><div class="progress"><span id="studybar"></span></div></div>
+<div class="card"><div class="metric-label">TASKS COMPLETED</div><div class="metric" id="tasks">0 / 0</div><div class="hint">Keep the promises you make</div></div>
+<div class="card"><div class="metric-label">NET CASH FLOW</div><div class="metric" id="cash">LKR 0</div><div class="hint">Income minus expenses</div></div>
+<div class="card"><div class="metric-label">TRADING JOURNAL</div><div class="metric" id="trades">0</div><div class="hint">Setups logged today</div></div>
+</section>
+<section class="section cols">
+<div class="card"><div class="sectionhead"><h2>Today's priorities</h2><span class="pill" id="taskcount">0 tasks</span></div>
+<div class="empty" id="tasklist">Your daily task list will appear here when task tracking is connected.</div>
+<div class="actions"><button class="primary" onclick="addTask()">＋ Add a task</button><button onclick="showPlan()">View daily plan</button></div><div class="note">Suggested focus areas are kept separate so A/L study remains the priority.</div></div>
+<div class="card"><div class="sectionhead"><h2>Focus lanes</h2><span class="sub">Set your intention</span></div>
+<div class="track"><div><span class="dot study"></span>A/L study</div><span class="pill">Main priority</span></div>
+<div class="track"><div><span class="dot forge"></span>WebForge</div><span class="pill">When planned</span></div>
+<div class="track"><div><span class="dot trade"></span>Trading education</div><span class="pill">Process first</span></div>
+<div class="track"><div><span class="dot personal"></span>Health & life</div><span class="pill">Protect energy</span></div></div>
+</section>
+<section class="section cols">
+<div class="card"><div class="sectionhead"><h2>Money snapshot</h2><span class="sub">LKR / USD-ready</span></div><div class="empty">Log income and expenses to track cash flow, categories and your monthly progress.</div><div class="actions"><button onclick="alert('Money tracking will be enabled when the secure database connection is configured.')">＋ Log money</button></div></div>
+<div class="card"><div class="sectionhead"><h2>Trading discipline</h2><span class="sub">Journal, don't guess</span></div><div class="empty">Record the setup, entry, stop loss, planned risk, result and whether you followed your rules.</div><div class="actions"><button onclick="alert('Trading journal will be enabled when the secure database connection is configured.')">＋ Log a trade</button></div></div>
+</section>
+<div class="footer">DAILY COMMAND CENTER · PRIVATE WORK IN PROGRESS</div>
+</main>
+<script>
+const now=new Date();document.getElementById('today').textContent=now.toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric',year:'numeric'});
+function addTask(){const t=prompt('What is the task?');if(t&&t.trim()){document.getElementById('tasklist').textContent='Task noted for this preview: '+t.trim()+'. Persistent task saving will be enabled after database authentication is connected.';document.getElementById('taskcount').textContent='1 task';document.getElementById('tasks').textContent='0 / 1';}}
+function showPlan(){alert('Daily plan: 1) A/L study first  2) WebForge only if planned  3) Trading education  4) Review and rest.');}
+</script></body></html>

@@ -59,6 +59,42 @@ input:focus,select:focus,textarea:focus{outline:2px solid #315cf533;border-color
 .auth{box-shadow:0 20px 70px #20335d14;border-color:#e0e6f3}
 @media(max-width:760px){.hero{padding:23px 20px;border-radius:21px;margin-top:18px}.orbit-section{padding:15px}.orbit-ring{width:68px;height:68px}.tabs{border-radius:14px}.card{padding:16px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}}
+
+/* Match the clean reference dashboard: crisp, bright, structured */
+body{background:#f4f6fb;color:#17213a}
+.wrap{max-width:1220px}
+.top{padding:8px 4px 12px}
+.top>.eyebrow{font-size:11px}
+.hero{min-height:210px;padding:32px 34px;background:linear-gradient(112deg,#121b34 0%,#233b78 68%,#315cf5 130%);box-shadow:0 16px 36px #1b2b571a}
+.hero h1{max-width:600px;font-size:clamp(36px,5.4vw,58px)}
+.hero .pill{z-index:1}
+.orbit-section{background:#fff;border:1px solid #e4e9f3;box-shadow:0 7px 24px #1c2b4c06}
+.orbit-section .sectionhead{margin-bottom:18px}
+.orbit-grid{gap:14px}
+.orbit-item{min-height:145px;background:linear-gradient(180deg,#fff,#fbfcff);border:1px solid #e8ecf5;box-shadow:0 3px 10px #1b2d5207}
+.orbit-ring{width:76px;height:76px}
+.grid>.card{padding:21px}
+.metric-label{font-size:10px;letter-spacing:.12em}
+.metric{font-size:32px;line-height:1.1;margin:12px 0 6px}
+.tabs{margin:18px 0 22px;border:1px solid #e0e6f2;border-radius:15px;padding:7px;box-shadow:0 5px 18px #1c2b4c07}
+.tabs button{font-size:13px;padding:10px 13px}
+.sectionhead h2{font-size:19px}
+.item{padding:14px 15px}
+.tradeview-launch{padding:22px 24px}
+.trade-now{min-height:52px}
+.auth{background:#fff}
+.auth h1{letter-spacing:-.04em;color:#17213a}
+.footer{padding-bottom:8px}
+@media(max-width:600px){
+ .hero{padding:25px 21px;min-height:0}
+ .hero h1{font-size:37px}
+ .orbit-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+ .orbit-item{min-height:122px;padding:12px 3px}
+ .orbit-ring{width:62px;height:62px}
+ .grid>.card{padding:15px}
+ .metric{font-size:25px}
+ .tabs{margin-top:14px}
+}
 </style></head><body>
 <div id="authscreen" class="card auth"><div class="eyebrow">PERSONAL OPERATING SYSTEM</div><h1 style="margin-bottom:4px">Daily Command Center</h1><p class="muted">Sign in to keep your tasks, money and trading journal private.</p><div id="authmsg"></div><form id="authform"><div class="field"><label>Email</label><input id="email" type="email" autocomplete="email" required></div><div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password" minlength="6" required></div><button class="primary" type="submit" id="authsubmit">Sign in</button><button type="button" id="toggleauth">Create account</button></form><p class="muted">Your records are stored in the separate Daily Command Center database. Never share your password.</p></div>
 <main id="app" class="wrap hidden"><header class="top"><div class="eyebrow">PERSONAL OPERATING SYSTEM</div><div class="rowline"><span class="date" id="today"></span><button id="logout">Sign out</button></div></header>

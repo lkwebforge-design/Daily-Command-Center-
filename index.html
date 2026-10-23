@@ -95,6 +95,102 @@ body{background:#f4f6fb;color:#17213a}
  .metric{font-size:25px}
  .tabs{margin-top:14px}
 }
+
+/* 2026 redesign: calm ivory + forest green, inspired by the supplied dashboard */
+:root{color-scheme:light;--bg:#f5f7f3;--panel:#fff;--line:#e3e9e1;--muted:#788478;--text:#202c24;--lime:#26784a;--blue:#5d9d75;--red:#c95050}
+html{scroll-behavior:smooth}
+body{background:#f5f7f3;color:#202c24;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.wrap{max-width:none;margin:0 0 0 224px;padding:25px clamp(18px,3vw,42px) 56px}
+.top{align-items:center;padding:3px 2px 12px}
+.top .eyebrow{color:#26784a;font-size:11px;letter-spacing:.12em}
+.date{font-size:12px}
+.hero{margin:10px 0 20px;padding:27px 30px;min-height:150px;align-items:center;border:1px solid #e1eadf;border-radius:22px;background:linear-gradient(115deg,#eaf4e9 0%,#f7faf4 60%,#e1efe2 100%);box-shadow:none;color:#202c24}
+.hero:after{border-color:#2e795019;box-shadow:0 0 0 26px #2e795008,0 0 0 54px #2e795006}
+.hero h1{font-size:clamp(30px,3.3vw,43px);letter-spacing:-.045em;margin:9px 0 8px;color:#1c3525}
+.hero p{color:#647466}
+.hero .eyebrow{color:#26784a}
+.hero .pill{background:#fff;color:#2d7148;border:1px solid #d7e6d6}
+.card,.modal{background:#fff;border:1px solid #e3e9e1;border-radius:17px;box-shadow:0 3px 12px #223b2606}
+.grid{gap:12px}
+.grid>.card{padding:18px 19px;box-shadow:0 3px 12px #223b2606}
+.grid>.card:hover{transform:translateY(-1px);border-color:#c9ddca;box-shadow:0 8px 22px #254c2b0d}
+.metric-label{color:#7a887b;font-size:10px;font-weight:750;letter-spacing:.09em}
+.metric{font-size:clamp(23px,2vw,30px);line-height:1.15;color:#203a29;margin:10px 0 5px}
+.muted,.date,.hint,.sub{color:#7b887d}
+.sectionhead h2{font-size:18px;letter-spacing:-.025em;color:#24372a}
+.eyebrow{color:#28794a;letter-spacing:.12em}
+button{background:#f7f9f6;color:#304435;border:1px solid #dfe7dc;border-radius:10px;box-shadow:none}
+button:hover{background:#edf5ec;border-color:#c7dcc7;filter:none}
+button.primary,.tabs button.active{background:#26784a;color:#fff;border-color:#26784a;box-shadow:0 4px 10px #26784a18}
+button.primary:hover,.tabs button.active:hover{background:#1f663e}
+.progress{background:#eaf0e7;height:6px}
+.progress span{background:linear-gradient(90deg,#26784a,#73b184)}
+.pill{background:#edf5ec;color:#2e7047}
+.item{border-color:#e5ebe3;background:#fcfdfb;border-radius:12px;padding:13px 14px}
+.item small{color:#7b887d}
+.item input[type=checkbox]{accent-color:#26784a}
+.empty{background:#fbfcfa;border-color:#dbe5d9;color:#7c897d}
+input,select,textarea{background:#fbfcfa;color:#25372a;border:1px solid #dfe7dd;border-radius:10px}
+input:focus,select:focus,textarea:focus{outline:2px solid #26784a22;border-color:#75a982}
+.field label{color:#6c7b6e}
+.notice{background:#eaf5eb;color:#286a3e}
+.notice.error{background:#fff0ef;color:#a73535}
+.modalback{background:#18251ab8;backdrop-filter:blur(7px)}
+.modal{box-shadow:0 22px 70px #1d332033}
+.walletcard{background:linear-gradient(115deg,#174c32,#26784a 70%,#5a9c6d);border:0;box-shadow:0 12px 28px #26784a1c}
+.walletcard .muted,.walletcard .hint{color:#e0eee2}
+.walletbalance{color:#fff}
+.walletactions button{background:#ffffff17;color:#fff;border-color:#ffffff45}
+.income-chart{border-bottom-color:#e2e9e0}
+.income-month strong{color:#536657}.income-month small{color:#879287}
+.income-bar{background:linear-gradient(180deg,#8fc99b,#26784a)}
+.chart-legend{color:#718073}.chart-legend i{background:#26784a}
+.sparkbars span{background:linear-gradient(180deg,#8fc99b,#26784a)}
+.orbit-section{background:#fff;border:1px solid #e3e9e1;border-radius:18px;box-shadow:0 3px 12px #223b2606;padding:17px 19px}
+.orbit-section .sectionhead{margin-bottom:12px}
+.orbit-grid{grid-template-columns:repeat(9,minmax(0,1fr));gap:9px}
+.orbit-item{min-height:108px;padding:11px 3px;background:#fbfdf9;border:1px solid #e5ece2;border-radius:13px;color:#314737;box-shadow:none}
+.orbit-item:hover{transform:translateY(-2px);border-color:#a9cfad;box-shadow:0 7px 16px #26784a12}
+.orbit-ring{width:54px;height:54px;--ring:#26784a!important;background:radial-gradient(circle at center,#fbfdf9 61%,transparent 63%),conic-gradient(var(--ring) var(--progress,0%),#e8eee5 0)}
+.orbit-ring span{font-size:13px;color:#26784a}
+.orbit-item strong{font-size:10px;color:#3d5141}
+.orbit-note{margin-top:8px}
+.tradeview-launch{background:linear-gradient(120deg,#f4f8f1,#eaf4e8);border-color:#dce9d8;box-shadow:none}
+.tradeview-brand h2{color:#203a29}
+.tradeview-mark{background:#26784a;color:#fff}
+.trade-now{background:#26784a;color:#fff;box-shadow:0 6px 16px #26784a24}
+.trade-now:hover{background:#1f663e;color:#fff}
+.tabs{position:fixed;left:12px;top:12px;bottom:12px;width:196px;z-index:20;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;flex-wrap:nowrap;overflow-y:auto;overflow-x:hidden;gap:5px;margin:0;padding:16px 10px;background:#fff;border:1px solid #e2e9df;border-radius:18px;box-shadow:0 8px 28px #1d33200a;backdrop-filter:none}
+.tabs:before{content:"DCC  /  WORKSPACE";display:block;padding:6px 9px 18px;margin-bottom:7px;border-bottom:1px solid #edf1ea;color:#26784a;font-size:11px;font-weight:850;letter-spacing:.09em;white-space:nowrap}
+.tabs button{width:100%;min-height:42px;flex:0 0 auto;text-align:left;white-space:normal;padding:10px 11px;border:1px solid transparent;border-radius:10px;background:transparent;color:#6b7a6c;font-size:12px;font-weight:650}
+.tabs button.active{background:#eaf4e9;color:#26784a;border-color:#e1eee0;box-shadow:none}
+.tabs button:hover{background:#f1f6ef;color:#26784a;border-color:transparent}
+.footer{color:#929d91}
+.auth{background:#fff;border-color:#e1e9de;box-shadow:0 16px 50px #203b2010}
+.auth h1{color:#203a29;letter-spacing:-.04em}
+#authscreen .eyebrow{color:#26784a}
+@media(min-width:1200px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.hero{padding:29px 32px}.orbit-grid{grid-template-columns:repeat(9,minmax(0,1fr))}}
+@media(max-width:1050px) and (min-width:761px){.wrap{margin-left:194px;padding:20px 18px 48px}.tabs{width:168px}.tabs button{font-size:11px;padding:9px 8px}.orbit-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.orbit-item{min-height:100px}}
+@media(max-width:760px){
+ .wrap{margin:0;padding:15px 12px 42px}
+ .tabs{position:sticky;left:auto;top:5px;bottom:auto;width:auto;height:auto;display:flex;flex-direction:row;align-items:center;gap:5px;overflow-x:auto;overflow-y:hidden;margin:12px 0 17px;padding:7px;border-radius:13px;flex-wrap:nowrap}
+ .tabs:before{display:none}
+ .tabs button{width:auto;min-width:max-content;min-height:38px;padding:8px 11px;text-align:center;white-space:nowrap;font-size:11px}
+ .hero{padding:22px 19px;min-height:0;margin-top:9px;border-radius:17px}
+ .hero h1{font-size:clamp(29px,8vw,38px)}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .grid>.card{padding:14px}
+ .metric{font-size:24px}
+ .orbit-section{padding:14px}
+ .orbit-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+ .orbit-item{min-height:105px}
+ .orbit-ring{width:55px;height:55px}
+ .sectionhead h2{font-size:17px}
+ .item{padding:11px}
+}
+@media(max-width:380px){.hero .pill{display:none}.metric{font-size:21px}.tabs button{padding:8px 9px}.orbit-grid{gap:6px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+
 </style></head><body>
 <div id="authscreen" class="card auth"><div class="eyebrow">PERSONAL OPERATING SYSTEM</div><h1 style="margin-bottom:4px">Daily Command Center</h1><p class="muted">Sign in to keep your tasks, money and trading journal private.</p><div id="authmsg"></div><form id="authform"><div class="field"><label>Email</label><input id="email" type="email" autocomplete="email" required></div><div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password" minlength="6" required></div><button class="primary" type="submit" id="authsubmit">Sign in</button><button type="button" id="toggleauth">Create account</button></form><p class="muted">Your records are stored in the separate Daily Command Center database. Never share your password.</p></div>
 <main id="app" class="wrap hidden"><header class="top"><div class="eyebrow">PERSONAL OPERATING SYSTEM</div><div class="rowline"><span class="date" id="today"></span><button id="logout">Sign out</button></div></header>

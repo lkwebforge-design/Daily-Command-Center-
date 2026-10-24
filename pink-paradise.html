@@ -229,7 +229,7 @@ body.searching .item.search-hidden{display:none!important}
 .visual-inspiration-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:0 2px 12px}
 .visual-inspiration-head h2{margin:4px 0 0;font-size:18px;letter-spacing:-.03em;color:#24372a}
 .visual-photo-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
-body.pink-theme #app{background:#fffafd;color:#63374e;border-radius:24px;padding:16px}
+body.pink-theme #app{background:#fffafd;color:#63374e;border-radius:24px;padding:16px};body.pink-theme #themeToggle{display:none}
 body.pink-theme .tabs{background:#fff2f8;border:1px solid #f1c9dc;border-radius:16px}
 body.pink-theme .tabs button.active,body.pink-theme button.primary{background:#d95b9b;color:#fff;border-color:#d95b9b}
 body.pink-theme .card,body.pink-theme #customlayoutsview{background:#fff;border-color:#f1c9dc;color:#63374e;box-shadow:0 8px 24px #b74f7a0c}
@@ -386,7 +386,7 @@ body.pink-theme #dcc-rose-petal-layer{display:block}
 const SUPABASE_URL='https://yqwdxfkjhvoidtwhntsu.supabase.co';
 const SUPABASE_KEY='sb_publishable_QYMf7DHyiLimhiXcM3pI_Q_YEmusJiH';
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-if('serviceWorker' in navigator && location.protocol==='https:'){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('Push service worker registration failed:',err)));}
+if('serviceWorker' in navigator && location.protocol==='https:'){window.addEventListener('load',()=>navigator.serviceWorker.register('./pink-sw.js').catch(err=>console.warn('Pink Paradise notification service worker registration failed:',err)));}
 const $=id=>document.getElementById(id);let user=null,mode='signin',recordType='',records={tasks:[],money:[],trades:[],reviews:[],books:[],chapters:[]};
 const today=new Date();const day=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
 $('today').textContent=today.toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric',year:'numeric'});const monday=new Date(today);monday.setDate(monday.getDate()-((monday.getDay()+6)%7));$('weekstart').value=monday.getFullYear()+'-'+String(monday.getMonth()+1).padStart(2,'0')+'-'+String(monday.getDate()).padStart(2,'0');

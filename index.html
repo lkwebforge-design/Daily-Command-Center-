@@ -387,8 +387,8 @@ function renderReminders(){
 }
 function reminderForm(existing){
  const title=prompt('Reminder title:',existing?.title||'');if(title===null||!title.trim())return;
- const date=prompt('Date (YYYY-MM-DD):',existing?.date||new Date().toISOString().slice(0,10));if(date===null||!/^\\d{4}-\\d{2}-\\d{2}$/.test(date)){alert('Please enter date as YYYY-MM-DD.');return}
- const time=prompt('Time (24-hour HH:MM):',existing?.time||'08:00');if(time===null||!/^([01]\\d|2[0-3]):[0-5]\\d$/.test(time)){alert('Please enter time as HH:MM, e.g. 18:30.');return}
+ const date=prompt('Date (YYYY-MM-DD):',existing?.date||new Date().toISOString().slice(0,10));if(date===null||!/^\d{4}-\d{2}-\d{2}$/.test(date)){alert('Please enter date as YYYY-MM-DD.');return}
+ const time=prompt('Time (24-hour HH:MM):',existing?.time||'08:00');if(time===null||!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)){alert('Please enter time as HH:MM, e.g. 18:30.');return}
  const repeat=prompt('Repeat: never, daily, weekly',existing?.repeat||'never');if(repeat===null)return;const rep=repeat.trim().toLowerCase();if(!['never','daily','weekly'].includes(rep)){alert('Repeat must be never, daily, or weekly.');return}
  const list=getReminders();if(existing){const i=list.findIndex(x=>x.id===existing.id);if(i>=0)list[i]={...list[i],title:title.trim(),date,time,repeat:rep}}else list.push({id:'rem-'+Date.now(),title:title.trim(),date,time,repeat:rep,done:false});
  saveReminders(list);renderReminders();

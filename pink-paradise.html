@@ -399,7 +399,12 @@ body.pink-theme .layout-tile .actions button{flex:1;min-width:90px}
    if(response.error)throw response.error;
    if(!response.data||!response.data.session||!response.data.user)throw new Error('The service did not return an active session.');
    show('Sign-in successful. Opening your workspace…',false);
-   window.location.replace(window.location.pathname+'?auth='+Date.now());
+   /* Use the dashboard already loaded in this page instead of redirecting and losing the visible success state. */
+   if(typeof window.__pinkStartDashboard==='function'){
+    await window.__pinkStartDashboard(response.data.user);
+    return;
+   }
+   throw new Error('You are signed in, but the dashboard script did not finish loading. Refresh the page once; your sign-in is saved.');
   }catch(err){
    const raw=String(err&&err.message||err||'Unknown error');
    const low=raw.toLowerCase();
@@ -521,6 +526,8 @@ $('authform').addEventListener('submit',async e=>{e.preventDefault();e.stopPropa
 $('logout').onclick=async()=>{const {error}=await db.auth.signOut();if(error)message('status','Could not sign out: '+error.message,true)};
 /* The submit handler starts a newly authenticated session; getSession restores an existing one. Keep this listener for explicit sign-out only, avoiding duplicate dashboard startup during Supabase auth callbacks. */
 db.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){user=null;records={tasks:[],money:[],trades:[],reviews:[],books:[],chapters:[]};customLayouts=[];reminderCache=[];$('app').classList.add('hidden');$('authscreen').classList.remove('hidden')}});
+/* Expose only the existing dashboard bootstrap to the isolated sign-in handler. */
+window.__pinkStartDashboard=start;
 function pinkTimetableKey(){return 'dcc-pink-timetable-'+(user?.id||'signed-out')}
 function defaultPinkRows(){return [{time:'8–10 AM',days:['Study','Study','Study','Study','Study','Weaving','Rest']},{time:'10–12 PM',days:['Study','Exercise','Study','Weaving','Study','Weaving','Family']},{time:'1–3 PM',days:['Class / work','Class / work','Class / work','Class / work','Class / work','Personal','Personal']},{time:'3–5 PM',days:['Exercise','Weaving','Exercise','Study','Weaving','Personal','Plan week']}]}
 function renderPinkPlanner(){const shell=$('pinkCalendarShell');if(!shell||!user)return;const today=new Date(),monday=new Date(today);monday.setDate(today.getDate()-((today.getDay()+6)%7));$('pinkCalendarTitle').textContent=monday.toLocaleDateString(undefined,{month:'short',day:'numeric'})+' – '+new Date(monday.getTime()+6*86400000).toLocaleDateString(undefined,{month:'short',day:'numeric'});$('pinkCalendarDays').innerHTML=Array.from({length:7},(_,i)=>{const d=new Date(monday);d.setDate(monday.getDate()+i);return '<div class="pink-calendar-day '+(d.toDateString()===today.toDateString()?'today':'')+'>'+['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][i]+'<strong>'+d.getDate()+'</strong></div>'}).join('');let rows;try{rows=JSON.parse(localStorage.getItem(pinkTimetableKey())||'null')}catch(e){}if(!Array.isArray(rows))rows=defaultPinkRows();$('pinkTimetableBody').innerHTML=rows.map((r,ri)=>'<tr><th><button type="button" onclick="editPinkTime('+ri+')">'+esc(r.time)+'</button></th>'+r.days.map((v,di)=>'<td><button type="button" onclick="editPinkCell('+ri+','+di+')">'+esc(v||'+ Add')+'</button></td>').join('')+'</tr>').join('')}

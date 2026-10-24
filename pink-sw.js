@@ -1,4 +1,4 @@
-const CACHE_NAME='pink-paradise-shell-v1';
+const CACHE_NAME='pink-paradise-shell-v2';
 const APP_URL='https://lkwebforge-design.github.io/Daily-Command-Center-/pink-paradise.html';
 self.addEventListener('install',event=>{event.waitUntil(self.skipWaiting());});
 self.addEventListener('activate',event=>{event.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(k=>k.startsWith('pink-paradise-shell-')&&k!==CACHE_NAME).map(k=>caches.delete(k)));await self.clients.claim();})());});
@@ -9,12 +9,14 @@ self.addEventListener('push',event=>{
   body:data.body||'A gentle reminder for you.',
   icon:'https://lkwebforge-design.github.io/Daily-Command-Center-/pink-icon.svg',
   badge:'https://lkwebforge-design.github.io/Daily-Command-Center-/pink-icon.svg',
-  data:{url:APP_URL+'?source=notification#reminders'},tag:data.tag||'pink-paradise-reminder'
+  data:{url:(typeof data.url==='string'&&data.url.startsWith(APP_URL)?data.url:APP_URL+'?source=notification#reminders')},tag:data.tag||'pink-paradise-reminder',
+  vibrate:[120,60,120],renotify:false,requireInteraction:false
  }));
 });
 self.addEventListener('notificationclick',event=>{
  event.notification.close();
- const target=APP_URL+'?source=notification#reminders';
+ const requested=event.notification.data&&event.notification.data.url;
+ const target=(typeof requested==='string'&&requested.startsWith(APP_URL))?requested:APP_URL+'?source=notification#reminders';
  event.waitUntil((async()=>{
   const list=await self.clients.matchAll({type:'window',includeUncontrolled:true});
   for(const client of list){

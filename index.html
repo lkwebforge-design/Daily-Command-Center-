@@ -269,14 +269,16 @@ body.pink-theme .visual-photo{border-color:#f0c8dd}
 body.pink-theme .quick-search,body.pink-theme .quick-menu{border-color:#f0c8dd;background:#fffafd}
 body.pink-theme .quick-menu button{background:#fffafd}
 body.pink-theme .notice{background:#ffe5f1;color:#8e3e6b}body.pink-theme .notice.error{background:#ffe0e7;color:#9d2448}
+body.pink-theme .alert-mark.green{background:#e77fb3}
 /* Her mode keeps her planner focused on personal routines rather than trading/business tools. */
 body.pink-theme .tabs button[data-tab="moneyview"],body.pink-theme .tabs button[data-tab="tradesview"],body.pink-theme .tabs button[data-tab="businessview"],body.pink-theme .tabs button[data-tab="authorview"]{display:none}
 body.pink-theme #tradesview,body.pink-theme #moneyview,body.pink-theme #businessview,body.pink-theme #authorview{display:none!important}
 body.pink-theme .orbit-item[data-target="tradesview"],body.pink-theme .orbit-item[data-target="moneyview"],body.pink-theme .orbit-item[data-target="businessview"],body.pink-theme .orbit-item[data-target="authorview"]{display:none}
 body.pink-theme .hero h1:after{content:"";display:inline-block;width:8px;height:8px;margin-left:8px;border-radius:50%;background:#c14f8d;vertical-align:middle}
 
-/* Soft falling rose petals across the entire dashboard, inspired by the Malki Salon look. */
-#dcc-rose-petal-layer{position:fixed;inset:0;z-index:9998;overflow:hidden;pointer-events:none;contain:strict}
+/* Rose petals are strictly a Pink Paradise decoration; keep the original dashboard clean. */
+#dcc-rose-petal-layer{display:none;position:fixed;inset:0;z-index:9998;overflow:hidden;pointer-events:none;contain:strict}
+body.pink-theme #dcc-rose-petal-layer{display:block}
 .dcc-rose-petal{position:absolute;top:-12vh;left:var(--left);width:var(--size);height:calc(var(--size)*1.42);opacity:var(--opacity);background:linear-gradient(145deg,#ffe0eb 0%,#f39ab9 48%,#c94f7e 100%);border-radius:2px 85% 3px 85%;box-shadow:0 1px 5px #b83d6a24;transform:rotate(var(--rotation));animation:dccRoseFall var(--duration) linear var(--delay) infinite}
 .dcc-rose-petal:nth-child(3n){background:linear-gradient(145deg,#fff0f5 0%,#f7b4ca 52%,#d66b91 100%)}
 .dcc-rose-petal:nth-child(4n){border-radius:85% 2px 85% 3px}

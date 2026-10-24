@@ -51,7 +51,7 @@ alter table public.couple_weekly_checkins enable row level security;
 create or replace function public.is_couple_member(p_space uuid)
 returns boolean language sql stable security definer set search_path=''
 as $$ select exists(select 1 from public.couple_members m where m.space_id=p_space and m.user_id=(select auth.uid())) $$;
-revoke all on function public.is_couple_member(uuid) from public;
+revoke all on function public.is_couple_member(uuid) from public, anon;
 grant execute on function public.is_couple_member(uuid) to authenticated;
 drop policy if exists couple_members_read_spaces on public.couple_spaces;
 create policy couple_members_read_spaces on public.couple_spaces for select to authenticated using(public.is_couple_member(id));
@@ -104,7 +104,7 @@ begin
  insert into public.couple_members(space_id,user_id) values(v_space,v_user);
  return v_space;
 end $$;
-revoke all on function public.create_couple_space(text) from public;
-revoke all on function public.join_couple_space(text) from public;
+revoke all on function public.create_couple_space(text) from public, anon;
+revoke all on function public.join_couple_space(text) from public, anon;
 grant execute on function public.create_couple_space(text) to authenticated;
 grant execute on function public.join_couple_space(text) to authenticated;

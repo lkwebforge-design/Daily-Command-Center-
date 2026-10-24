@@ -1,0 +1,19 @@
+{
+  "name": "Daily Command Center",
+  "short_name": "Command Center",
+  "description": "Your personal daily planning and productivity dashboard.",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0d14",
+  "theme_color": "#0a0d14",
+  "icons": [
+    {
+      "src": "./app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -724,9 +724,9 @@ function saveReminders(list){reminderCache=list}
 function showReminderStatus(msg,error=false){message('reminderStatus',msg,error)}
 async function loadReminders(){
  if(!user){reminderCache=[];renderReminders();return}
- const {data,error}=await db.from('reminders').select('*').eq('user_id',user.id).order('reminder_at',{ascending:true});
+ const {data,error}=await db.from('reminders').select('*').eq('user_id',user.id).order('reminder_date',{ascending:true}).order('reminder_time',{ascending:true});
  if(error)throw error;
- reminderCache=(data||[]).map(r=>({...r,id:r.id,title:r.title,...reminderDateTime(r.reminder_at),repeat:r.repeat_rule,done:r.completed}));
+ reminderCache=(data||[]).map(r=>({...r,id:r.id,title:r.title,date:r.reminder_date||'',time:String(r.reminder_time||'').slice(0,5),repeat:r.repeat_rule,done:!!r.completed}));
  renderReminders();
 }
 function renderReminders(){
@@ -740,7 +740,7 @@ async function reminderForm(existing){
  const date=prompt('Date (YYYY-MM-DD):',existing?.date||new Date().getFullYear()+'-'+String(new Date().getMonth()+1).padStart(2,'0')+'-'+String(new Date().getDate()).padStart(2,'0'));if(date===null||!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(date)){alert('Please enter date as YYYY-MM-DD.');return}
  const time=prompt('Time (24-hour HH:MM):',existing?.time||'08:00');if(time===null||!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)){alert('Please enter time as HH:MM, e.g. 18:30.');return}
  const repeat=prompt('Repeat: never, daily, weekly',existing?.repeat||'never');if(repeat===null)return;const rep=repeat.trim().toLowerCase();if(!['never','daily','weekly'].includes(rep)){alert('Repeat must be never, daily, or weekly.');return}
- const payload={user_id:user.id,title:title.trim().slice(0,200),reminder_at:localDateTimeToISO(date,time),repeat_rule:rep,completed:false};
+ const payload={user_id:user.id,title:title.trim().slice(0,200),reminder_date:date,reminder_time:time,repeat_rule:rep,enabled:true,completed:false};
  const result=existing?await db.from('reminders').update({...payload,completed:!!existing.done,updated_at:new Date().toISOString()}).eq('id',existing.id).eq('user_id',user.id):await db.from('reminders').insert(payload);
  if(result.error){showReminderStatus('Could not save reminder: '+result.error.message,true);return}
  showReminderStatus('Reminder saved to your account. Push delivery still requires notification setup below.');await loadReminders();

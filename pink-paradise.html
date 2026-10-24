@@ -376,6 +376,43 @@ body.pink-theme .layout-tile .actions button{flex:1;min-width:90px}
 (()=>{const layer=document.getElementById('dcc-rose-petal-layer');if(!layer||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const count=18;for(let i=0;i<count;i++){const petal=document.createElement('span');petal.className='dcc-rose-petal';petal.style.setProperty('--left',(Math.random()*100)+'vw');petal.style.setProperty('--size',(8+Math.random()*10)+'px');petal.style.setProperty('--opacity',(0.28+Math.random()*0.34).toFixed(2));petal.style.setProperty('--rotation',(Math.random()*360)+'deg');petal.style.setProperty('--duration',(13+Math.random()*17)+'s');petal.style.setProperty('--delay',(-Math.random()*28)+'s');layer.appendChild(petal)}})();
 </script>
 <div id="authscreen" class="card auth"><div class="eyebrow">YOUR SHARED SPACE</div><h1 style="margin-bottom:4px">Pink Paradise</h1><p class="muted">Sign in to open your shared workspace on either device.</p><div id="authmsg" role="status" aria-live="polite"></div><form id="authform" novalidate><div class="field"><label for="email">Email address</label><input id="email" name="email" type="email" inputmode="email" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="you@example.com" required></div><div class="field"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required></div><button class="primary" type="submit" id="authsubmit">Sign in</button><button type="button" id="toggleauth">Create account</button></form><p class="muted">Your records stay private to your account. If sign-in fails, the reason will appear here.</p></div>
+<script>
+/* Isolated auth guard: keeps sign-in responsive even if a later dashboard script fails. */
+(function(){
+ const form=document.getElementById('authform');
+ if(!form||!window.supabase)return;
+ const url='https://vwaeevlgatximrfliwcs.supabase.co';
+ const key='sb_publishable_BKw6C_VLkskVKj3bpHJAiw_Y1Cw_yxs';
+ const authClient=window.supabase.createClient(url,key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+ const msg=document.getElementById('authmsg'),btn=document.getElementById('authsubmit');
+ let busy=false;
+ function show(text,isError){msg.textContent=text;msg.classList.remove('hidden');msg.classList.toggle('error',!!isError);}
+ form.addEventListener('submit',async function(ev){
+  ev.preventDefault();ev.stopImmediatePropagation();
+  if(busy)return;
+  const email=document.getElementById('email').value.trim();
+  const password=document.getElementById('password').value;
+  if(!email||!password){show('Enter both your email address and password.',true);return;}
+  busy=true;btn.disabled=true;btn.textContent='Signing in…';show('Contacting the sign-in service…',false);
+  try{
+   const response=await authClient.auth.signInWithPassword({email,password});
+   if(response.error)throw response.error;
+   if(!response.data||!response.data.session||!response.data.user)throw new Error('The service did not return an active session.');
+   show('Sign-in successful. Opening your workspace…',false);
+   window.location.replace(window.location.pathname+'?auth='+Date.now());
+  }catch(err){
+   const raw=String(err&&err.message||err||'Unknown error');
+   const low=raw.toLowerCase();
+   if(low.includes('invalid login credentials'))show('Email or password is incorrect. Check both and try again.',true);
+   else if(low.includes('email not confirmed'))show('Please confirm your email before signing in.',true);
+   else if(low.includes('fetch')||low.includes('network'))show('Could not connect to the sign-in service. Check your internet and try again.',true);
+   else if(low.includes('rate limit'))show('Too many attempts. Wait a little and try again.',true);
+   else show('Sign-in failed: '+raw,true);
+   console.error('Pink Paradise isolated sign-in error:',err);
+  }finally{busy=false;btn.disabled=false;btn.textContent='Sign in';}
+ },true);
+})();
+</script>
 <main id="app" class="wrap hidden">
 <aside class="pink-workspace-sidebar" aria-label="Pink Paradise workspace navigation">
  <div class="pink-workspace-brand"><strong>♡ Pink Paradise</strong><small>Your space to grow gently</small></div>

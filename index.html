@@ -387,7 +387,17 @@ body:not(.pink-theme) #app .tabs{display:none!important}
 <section id="ourspaceview" class="card hidden">
 <div class="sectionhead"><div><div class="eyebrow">JUST US TWO</div><h2><svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" style="vertical-align:-4px"><path d="M12 20s-7-4.4-9-9.1C1 6.3 6.5 2.9 12 8c5.5-5.1 11-1.7 9 2.9C19 15.6 12 20 12 20Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg> Our Space</h2><p class="hint">A private place for your shared goals, weekly plans and little check-ins.</p></div></div>
 <div id="coupleSpaceStatus" class="notice hidden"></div>
-<div id="coupleSetup" class="card">
+<div id="coupleAuthPanel" class="card">
+<h3>Sign in to Pink Paradise · Our Space</h3>
+<p class="hint">Our Space uses its own shared database, separate from your personal dashboard. Enter your email and we’ll send you a secure sign-in link.</p>
+<div id="coupleAuthMsg" class="notice hidden"></div>
+<form id="coupleAuthForm">
+<div class="field"><label for="coupleAuthEmail">Our Space email</label><input id="coupleAuthEmail" type="email" autocomplete="email" required></div>
+<div class="actions"><button class="primary" type="submit" id="coupleAuthSubmit">Email me a sign-in link</button></div>
+</form>
+<button type="button" id="coupleAuthLogout" class="hidden" style="margin-top:10px">Sign out of Our Space</button>
+</div>
+<div id="coupleSetup" class="card hidden">
 <h3>Start your shared space</h3><p class="hint">One of you creates the space and shares the invite code. The other signs in to their own account and joins.</p>
 <div class="field"><label for="coupleSpaceName">Space name</label><input id="coupleSpaceName" maxlength="80" value="Our Space"></div>
 <div class="actions"><button class="primary" id="createCoupleSpace">Create our space</button></div>
@@ -435,7 +445,7 @@ const COUPLE_SUPABASE_URL='https://vwaeevlgatximrfliwcs.supabase.co';
 const COUPLE_SUPABASE_KEY='sb_publishable_BKw6C_VLkskVKj3bpHJAiw_Y1Cw_yxs';
 const coupleDb=window.supabase.createClient(COUPLE_SUPABASE_URL,COUPLE_SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'pink-paradise-our-space-auth'}});
 if('serviceWorker' in navigator && location.protocol==='https:'){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('Push service worker registration failed:',err)));}
-const $=id=>document.getElementById(id);let user=null,mode='signin',recordType='',records={tasks:[],money:[],trades:[],reviews:[],books:[],chapters:[]};
+const $=id=>document.getElementById(id);let user=null,coupleUser=null,mode='signin',recordType='',records={tasks:[],money:[],trades:[],reviews:[],books:[],chapters:[]};
 const today=new Date();const day=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
 $('today').textContent=today.toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric',year:'numeric'});const monday=new Date(today);monday.setDate(monday.getDate()-((monday.getDay()+6)%7));$('weekstart').value=monday.getFullYear()+'-'+String(monday.getMonth()+1).padStart(2,'0')+'-'+String(monday.getDate()).padStart(2,'0');
 function message(id,msg,error=false){$(id).textContent=msg;$(id).classList.remove('hidden');$(id).classList.toggle('error',error)}
@@ -444,6 +454,11 @@ $('toggleauth').onclick=()=>{mode=mode==='signin'?'signup':'signin';$('authsubmi
 $('authform').onsubmit=async e=>{e.preventDefault();$('authsubmit').disabled=true;try{const email=$('email').value.trim(),password=$('password').value;const r=mode==='signup'?await db.auth.signUp({email,password}):await db.auth.signInWithPassword({email,password});if(r.error)throw r.error;if(mode==='signup'&&!r.data.session){message('authmsg','Account created. Check your email for the confirmation link, then sign in.');}else{await start(r.data.user)}}catch(err){message('authmsg',err.message||'Authentication failed',true)}finally{$('authsubmit').disabled=false}};
 $('logout').onclick=()=>db.auth.signOut();
 db.auth.onAuthStateChange((event,session)=>{if(session?.user){setTimeout(()=>start(session.user),0)}else{user=null;records={tasks:[],money:[],trades:[],reviews:[],books:[],chapters:[]};customLayouts=[];reminderCache=[];$('app').classList.add('hidden');$('authscreen').classList.remove('hidden')}});
+
+$('coupleAuthForm').onsubmit=async e=>{e.preventDefault();$('coupleAuthSubmit').disabled=true;try{const email=$('coupleAuthEmail').value.trim();const r=await coupleDb.auth.signInWithOtp({email,options:{emailRedirectTo:window.location.href,shouldCreateUser:true}});if(r.error)throw r.error;message('coupleAuthMsg','Check your email for the secure Pink Paradise sign-in link. Open it on this device, then return to Our Space.');}catch(err){message('coupleAuthMsg',err.message||'Could not send the sign-in link.',true)}finally{$('coupleAuthSubmit').disabled=false}};
+$('coupleAuthLogout').onclick=async()=>{try{await coupleDb.auth.signOut();coupleUser=null;$('coupleAuthLogout').classList.add('hidden');$('coupleSetup').classList.add('hidden');$('coupleSpaceContent').classList.add('hidden');if(coupleMessagesTimer){clearInterval(coupleMessagesTimer);coupleMessagesTimer=null}coupleStatus('Signed out of Our Space. Your main dashboard remains signed in.');}catch(err){coupleStatus('Could not sign out: '+err.message,true)}};
+coupleDb.auth.onAuthStateChange((event,session)=>{coupleUser=session?.user||null;setTimeout(()=>{if(coupleUser){$('coupleSetup').classList.remove('hidden');$('coupleAuthLogout').classList.remove('hidden');loadCoupleSpace().catch(e=>coupleStatus(e.message||'Could not load Our Space.',true));}else{$('coupleSetup').classList.add('hidden');$('coupleSpaceContent').classList.add('hidden');$('coupleAuthLogout').classList.add('hidden');if(coupleMessagesTimer){clearInterval(coupleMessagesTimer);coupleMessagesTimer=null}}},0);});
+
 function pinkTimetableKey(){return 'dcc-pink-timetable-'+(user?.id||'signed-out')}
 function defaultPinkRows(){return [{time:'8–10 AM',days:['Study','Study','Study','Study','Study','Weaving','Rest']},{time:'10–12 PM',days:['Study','Exercise','Study','Weaving','Study','Weaving','Family']},{time:'1–3 PM',days:['Class / work','Class / work','Class / work','Class / work','Class / work','Personal','Personal']},{time:'3–5 PM',days:['Exercise','Weaving','Exercise','Study','Weaving','Personal','Plan week']}]}
 function renderPinkPlanner(){const shell=$('pinkCalendarShell');if(!shell||!user)return;const today=new Date(),monday=new Date(today);monday.setDate(today.getDate()-((today.getDay()+6)%7));$('pinkCalendarTitle').textContent=monday.toLocaleDateString(undefined,{month:'short',day:'numeric'})+' – '+new Date(monday.getTime()+6*86400000).toLocaleDateString(undefined,{month:'short',day:'numeric'});$('pinkCalendarDays').innerHTML=Array.from({length:7},(_,i)=>{const d=new Date(monday);d.setDate(monday.getDate()+i);return '<div class="pink-calendar-day '+(d.toDateString()===today.toDateString()?'today':'')+'>'+['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][i]+'<strong>'+d.getDate()+'</strong></div>'}).join('');let rows;try{rows=JSON.parse(localStorage.getItem(pinkTimetableKey())||'null')}catch(e){}if(!Array.isArray(rows))rows=defaultPinkRows();$('pinkTimetableBody').innerHTML=rows.map((r,ri)=>'<tr><th><button type="button" onclick="editPinkTime('+ri+')">'+esc(r.time)+'</button></th>'+r.days.map((v,di)=>'<td><button type="button" onclick="editPinkCell('+ri+','+di+')">'+esc(v||'+ Add')+'</button></td>').join('')+'</tr>').join('')}
@@ -516,11 +531,11 @@ const weekInput=$('coupleWeekStart');
 if(weekInput){const now=new Date();now.setDate(now.getDate()-((now.getDay()+6)%7));weekInput.value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')}
 function coupleStatus(msg,error=false){message('coupleSpaceStatus',msg,error)}
 async function loadCoupleSpace(){
- if(!user)return;
- const {data:members,error}=await db.from('couple_members').select('space_id').eq('user_id',user.id).limit(1);
+ if(!coupleUser){$('coupleSetup').classList.add('hidden');$('coupleSpaceContent').classList.add('hidden');if(coupleMessagesTimer){clearInterval(coupleMessagesTimer);coupleMessagesTimer=null}return}
+ const {data:members,error}=await coupleDb.from('couple_members').select('space_id').eq('user_id',coupleUser.id).limit(1);
  if(error)throw error;
  coupleSpace=null;
- if(members&&members.length){const {data:space,error:se}=await db.from('couple_spaces').select('id,name,invite_code').eq('id',members[0].space_id).single();if(se)throw se;coupleSpace=space}
+ if(members&&members.length){const {data:space,error:se}=await coupleDb.from('couple_spaces').select('id,name,invite_code').eq('id',members[0].space_id).single();if(se)throw se;coupleSpace=space}
  $('coupleSetup').classList.toggle('hidden',!!coupleSpace);
  $('coupleSpaceContent').classList.toggle('hidden',!coupleSpace);
  if(!coupleSpace){if(coupleMessagesTimer){clearInterval(coupleMessagesTimer);coupleMessagesTimer=null}return}
@@ -528,40 +543,40 @@ async function loadCoupleSpace(){
  $('coupleInviteDisplay').textContent=coupleSpace.invite_code;
  await Promise.all([loadCoupleMessages(),loadCoupleGoals(),loadCoupleWeeklyPlans()]);
  if(coupleMessagesTimer)clearInterval(coupleMessagesTimer);
- coupleMessagesTimer=setInterval(()=>{if(user&&coupleSpace&&!$('ourspaceview').classList.contains('hidden'))loadCoupleMessages().catch(()=>{})},12000);
+ coupleMessagesTimer=setInterval(()=>{if(coupleUser&&coupleSpace&&!$('ourspaceview').classList.contains('hidden'))loadCoupleMessages().catch(()=>{})},12000);
 }
 async function loadCoupleMessages(){
  if(!coupleSpace)return;
- const {data,error}=await db.from('couple_messages').select('id,sender_id,body,created_at').eq('space_id',coupleSpace.id).order('created_at',{ascending:true}).limit(100);
+ const {data,error}=await coupleDb.from('couple_messages').select('id,sender_id,body,created_at').eq('space_id',coupleSpace.id).order('created_at',{ascending:true}).limit(100);
  if(error)throw error;
  const node=$('coupleChatMessages');
- node.innerHTML=(data||[]).map(m=>'<div class="item" style="display:block;background:'+(m.sender_id===user.id?'#fce7f3':'#fff')+';color:#4b2440;border-color:#f3c4da"><div class="rowline"><strong>'+(m.sender_id===user.id?'You':'Your partner')+'</strong><small>'+esc(new Date(m.created_at).toLocaleString())+'</small></div><div style="white-space:pre-wrap;overflow-wrap:anywhere;margin-top:5px">'+esc(m.body)+'</div></div>').join('')||'<div class="empty">No messages yet. Send the first little check-in</div>';
+ node.innerHTML=(data||[]).map(m=>'<div class="item" style="display:block;background:'+(m.sender_id===coupleUser.id?'#fce7f3':'#fff')+';color:#4b2440;border-color:#f3c4da"><div class="rowline"><strong>'+(m.sender_id===coupleUser.id?'You':'Your partner')+'</strong><small>'+esc(new Date(m.created_at).toLocaleString())+'</small></div><div style="white-space:pre-wrap;overflow-wrap:anywhere;margin-top:5px">'+esc(m.body)+'</div></div>').join('')||'<div class="empty">No messages yet. Send the first little check-in</div>';
  node.scrollTop=node.scrollHeight;
 }
 async function loadCoupleGoals(){
  if(!coupleSpace)return;
- const {data,error}=await db.from('couple_goals').select('id,title,details,due_date,completed_at,created_by').eq('space_id',coupleSpace.id).order('created_at',{ascending:false});
+ const {data,error}=await coupleDb.from('couple_goals').select('id,title,details,due_date,completed_at,created_by').eq('space_id',coupleSpace.id).order('created_at',{ascending:false});
  if(error)throw error;
  $('coupleGoalsList').innerHTML=(data||[]).map(g=>'<div class="item"><div class="itemmain"><input type="checkbox" style="width:auto" '+(g.completed_at?'checked':'')+' onchange="toggleCoupleGoal(\''+g.id+'\',this.checked)"><div><strong style="'+(g.completed_at?'text-decoration:line-through;opacity:.65':'')+'">'+esc(g.title)+'</strong><small>'+esc(g.details||'')+(g.due_date?' · Due '+esc(g.due_date):'')+'</small></div></div></div>').join('')||'<div class="empty">Add a goal you both want to work towards.</div>';
 }
-window.toggleCoupleGoal=async(id,done)=>{if(!coupleSpace||!user)return;const {error}=await db.from('couple_goals').update({completed_at:done?new Date().toISOString():null,completed_by:done?user.id:null}).eq('id',id).eq('space_id',coupleSpace.id);if(error)coupleStatus('Could not update goal: '+error.message,true);else await loadCoupleGoals()};
+window.toggleCoupleGoal=async(id,done)=>{if(!coupleSpace||!coupleUser)return;const {error}=await coupleDb.from('couple_goals').update({completed_at:done?new Date().toISOString():null,completed_by:done?coupleUser.id:null}).eq('id',id).eq('space_id',coupleSpace.id);if(error)coupleStatus('Could not update goal: '+error.message,true);else await loadCoupleGoals()};
 async function loadCoupleWeeklyPlans(){
  if(!coupleSpace)return;
  const week=$('coupleWeekStart').value;if(!week)return;
- const {data,error}=await db.from('couple_weekly_checkins').select('user_id,week_start,plan,completed,updated_at').eq('space_id',coupleSpace.id).eq('week_start',week).order('updated_at',{ascending:false});
+ const {data,error}=await coupleDb.from('couple_weekly_checkins').select('user_id,week_start,plan,completed,updated_at').eq('space_id',coupleSpace.id).eq('week_start',week).order('updated_at',{ascending:false});
  if(error)throw error;
- const mine=(data||[]).find(x=>x.user_id===user.id);
+ const mine=(data||[]).find(x=>x.user_id===coupleUser.id);
  $('coupleWeeklyPlan').value=mine?.plan||'';$('couplePlanDone').checked=!!mine?.completed;
- $('coupleWeeklyPlans').innerHTML=(data||[]).map(x=>'<div class="item" style="display:block"><strong>'+(x.user_id===user.id?'Your plan':'Partner’s plan')+' · '+(x.completed?'Completed':'In progress')+'</strong><div style="white-space:pre-wrap;margin-top:5px">'+esc(x.plan||'No plan added yet')+'</div></div>').join('')||'<div class="empty">No plans shared for this week yet.</div>';
+ $('coupleWeeklyPlans').innerHTML=(data||[]).map(x=>'<div class="item" style="display:block"><strong>'+(x.user_id===coupleUser.id?'Your plan':'Partner’s plan')+' · '+(x.completed?'Completed':'In progress')+'</strong><div style="white-space:pre-wrap;margin-top:5px">'+esc(x.plan||'No plan added yet')+'</div></div>').join('')||'<div class="empty">No plans shared for this week yet.</div>';
 }
-$('createCoupleSpace').onclick=async()=>{if(!user)return;try{$('createCoupleSpace').disabled=true;const {data,error}=await db.rpc('create_couple_space',{p_name:$('coupleSpaceName').value.trim()||'Our Space'});if(error)throw error;coupleStatus('Our Space created! Share the invite code shown below with your partner.');await loadCoupleSpace()}catch(e){coupleStatus(e.message||'Could not create space.',true)}finally{$('createCoupleSpace').disabled=false}};
-$('joinCoupleSpace').onclick=async()=>{if(!user)return;try{$('joinCoupleSpace').disabled=true;const {error}=await db.rpc('join_couple_space',{p_code:$('coupleInviteCode').value.trim()});if(error)throw error;coupleStatus('You joined Our Space');await loadCoupleSpace()}catch(e){coupleStatus(e.message||'Could not join space.',true)}finally{$('joinCoupleSpace').disabled=false}};
+$('createCoupleSpace').onclick=async()=>{if(!coupleUser)return;try{$('createCoupleSpace').disabled=true;const {data,error}=await coupleDb.rpc('create_couple_space',{p_name:$('coupleSpaceName').value.trim()||'Our Space'});if(error)throw error;coupleStatus('Our Space created! Share the invite code shown below with your partner.');await loadCoupleSpace()}catch(e){coupleStatus(e.message||'Could not create space.',true)}finally{$('createCoupleSpace').disabled=false}};
+$('joinCoupleSpace').onclick=async()=>{if(!coupleUser)return;try{$('joinCoupleSpace').disabled=true;const {error}=await coupleDb.rpc('join_couple_space',{p_code:$('coupleInviteCode').value.trim()});if(error)throw error;coupleStatus('You joined Our Space');await loadCoupleSpace()}catch(e){coupleStatus(e.message||'Could not join space.',true)}finally{$('joinCoupleSpace').disabled=false}};
 $('refreshCoupleSpace').onclick=()=>loadCoupleSpace().catch(e=>coupleStatus(e.message,true));
-$('leaveCoupleSpace').onclick=async()=>{if(!user||!coupleSpace)return;if(!confirm('Leave this shared space on your account? Your personal tasks, wallet, and trading journal will stay untouched. Shared space data will not be deleted, and your partner may still have access.'))return;const btn=$('leaveCoupleSpace');btn.disabled=true;try{const {error}=await db.rpc('leave_couple_space');if(error)throw error;if(coupleMessagesTimer){clearInterval(coupleMessagesTimer);coupleMessagesTimer=null}coupleSpace=null;coupleStatus('You left the shared space. You can now create a new one or join with an invite code.');await loadCoupleSpace()}catch(e){coupleStatus('Could not leave the space: '+(e.message||'Unknown error'),true)}finally{btn.disabled=false}};
+$('leaveCoupleSpace').onclick=async()=>{if(!coupleUser||!coupleSpace)return;if(!confirm('Leave this shared space on your account? Your personal tasks, wallet, and trading journal will stay untouched. Shared space data will not be deleted, and your partner may still have access.'))return;const btn=$('leaveCoupleSpace');btn.disabled=true;try{const {error}=await coupleDb.rpc('leave_couple_space');if(error)throw error;if(coupleMessagesTimer){clearInterval(coupleMessagesTimer);coupleMessagesTimer=null}coupleSpace=null;coupleStatus('You left the shared space. You can now create a new one or join with an invite code.');await loadCoupleSpace()}catch(e){coupleStatus('Could not leave the space: '+(e.message||'Unknown error'),true)}finally{btn.disabled=false}};
 $('refreshCoupleChat').onclick=()=>loadCoupleMessages().catch(e=>coupleStatus(e.message,true));
-$('coupleChatForm').onsubmit=async e=>{e.preventDefault();if(!coupleSpace||!user)return;const body=$('coupleChatInput').value.trim();if(!body)return;const btn=e.submitter;if(btn)btn.disabled=true;try{const {error}=await db.from('couple_messages').insert({space_id:coupleSpace.id,sender_id:user.id,body});if(error)throw error;$('coupleChatInput').value='';await loadCoupleMessages()}catch(err){coupleStatus('Message could not be sent: '+err.message,true)}finally{if(btn)btn.disabled=false}};
-$('addCoupleGoal').onclick=async()=>{if(!coupleSpace||!user)return;const title=prompt('What shared goal do you want to add?');if(!title||!title.trim())return;const details=prompt('Any details or steps? (optional)','')||'';const due=prompt('Due date YYYY-MM-DD (optional)','')||null;try{const {error}=await db.from('couple_goals').insert({space_id:coupleSpace.id,created_by:user.id,title:title.trim(),details,due_date:due&&/^\d{4}-\d{2}-\d{2}$/.test(due)?due:null});if(error)throw error;await loadCoupleGoals()}catch(e){coupleStatus('Could not add goal: '+e.message,true)}};
-$('saveCouplePlan').onclick=async()=>{if(!coupleSpace||!user)return;const week=$('coupleWeekStart').value;if(!week){coupleStatus('Choose a week first.',true);return}try{const {error}=await db.from('couple_weekly_checkins').upsert({space_id:coupleSpace.id,user_id:user.id,week_start:week,plan:$('coupleWeeklyPlan').value.trim(),completed:$('couplePlanDone').checked,updated_at:new Date().toISOString()},{onConflict:'space_id,user_id,week_start'});if(error)throw error;coupleStatus('Your weekly plan is saved');await loadCoupleWeeklyPlans()}catch(e){coupleStatus('Could not save weekly plan: '+e.message,true)}};
+$('coupleChatForm').onsubmit=async e=>{e.preventDefault();if(!coupleSpace||!coupleUser)return;const body=$('coupleChatInput').value.trim();if(!body)return;const btn=e.submitter;if(btn)btn.disabled=true;try{const {error}=await coupleDb.from('couple_messages').insert({space_id:coupleSpace.id,sender_id:coupleUser.id,body});if(error)throw error;$('coupleChatInput').value='';await loadCoupleMessages()}catch(err){coupleStatus('Message could not be sent: '+err.message,true)}finally{if(btn)btn.disabled=false}};
+$('addCoupleGoal').onclick=async()=>{if(!coupleSpace||!coupleUser)return;const title=prompt('What shared goal do you want to add?');if(!title||!title.trim())return;const details=prompt('Any details or steps? (optional)','')||'';const due=prompt('Due date YYYY-MM-DD (optional)','')||null;try{const {error}=await coupleDb.from('couple_goals').insert({space_id:coupleSpace.id,created_by:coupleUser.id,title:title.trim(),details,due_date:due&&/^\d{4}-\d{2}-\d{2}$/.test(due)?due:null});if(error)throw error;await loadCoupleGoals()}catch(e){coupleStatus('Could not add goal: '+e.message,true)}};
+$('saveCouplePlan').onclick=async()=>{if(!coupleSpace||!coupleUser)return;const week=$('coupleWeekStart').value;if(!week){coupleStatus('Choose a week first.',true);return}try{const {error}=await coupleDb.from('couple_weekly_checkins').upsert({space_id:coupleSpace.id,user_id:coupleUser.id,week_start:week,plan:$('coupleWeeklyPlan').value.trim(),completed:$('couplePlanDone').checked,updated_at:new Date().toISOString()},{onConflict:'space_id,user_id,week_start'});if(error)throw error;coupleStatus('Your weekly plan is saved');await loadCoupleWeeklyPlans()}catch(e){coupleStatus('Could not save weekly plan: '+e.message,true)}};
 $('coupleWeekStart').onchange=()=>loadCoupleWeeklyPlans().catch(e=>coupleStatus(e.message,true));
 
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{const target=b.dataset.tab;document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));['tasksview','moneyview','tradesview','reviewview','calendarview','focusview','businessview','authorview','customlayoutsview','remindersview','ourspaceview'].forEach(id=>$(id).classList.toggle('hidden',id!==target));const panel=$(target);if(panel)panel.scrollIntoView({behavior:'smooth',block:'start'});if(target==='remindersview')loadReminders().catch(e=>console.warn('Reminder load failed:',e.message))});

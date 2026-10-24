@@ -33,6 +33,11 @@ create table if not exists public.couple_goals (
  created_at timestamptz not null default now()
 );
 create index if not exists couple_goals_space_created_idx on public.couple_goals(space_id,created_at desc);
+create index if not exists couple_spaces_created_by_idx on public.couple_spaces(created_by);
+create index if not exists couple_messages_sender_id_idx on public.couple_messages(sender_id);
+create index if not exists couple_goals_created_by_idx on public.couple_goals(created_by);
+create index if not exists couple_goals_completed_by_idx on public.couple_goals(completed_by);
+create index if not exists couple_weekly_checkins_user_id_idx on public.couple_weekly_checkins(user_id);
 create table if not exists public.couple_weekly_checkins (
  id uuid primary key default gen_random_uuid(),
  space_id uuid not null references public.couple_spaces(id) on delete cascade,

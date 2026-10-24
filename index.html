@@ -271,9 +271,10 @@ body.pink-theme .quick-menu button{background:#fffafd}
 body.pink-theme .notice{background:#ffe5f1;color:#8e3e6b}body.pink-theme .notice.error{background:#ffe0e7;color:#9d2448}
 body.pink-theme .alert-mark.green{background:#e77fb3}
 /* Her mode keeps her planner focused on personal routines rather than trading/business tools. */
-body.pink-theme .tabs button[data-tab="moneyview"],body.pink-theme .tabs button[data-tab="tradesview"],body.pink-theme .tabs button[data-tab="businessview"],body.pink-theme .tabs button[data-tab="authorview"]{display:none}
-body.pink-theme #tradesview,body.pink-theme #moneyview,body.pink-theme #businessview,body.pink-theme #authorview{display:none!important}
-body.pink-theme .orbit-item[data-target="tradesview"],body.pink-theme .orbit-item[data-target="moneyview"],body.pink-theme .orbit-item[data-target="businessview"],body.pink-theme .orbit-item[data-target="authorview"]{display:none}
+body.pink-theme .tabs button[data-tab="tradesview"],body.pink-theme .tabs button[data-tab="businessview"],body.pink-theme .tabs button[data-tab="authorview"]{display:none}
+body.pink-theme #tradesview,body.pink-theme #businessview,body.pink-theme #authorview{display:none!important}
+body.pink-theme .orbit-section,body.pink-theme main#app>section.grid,body.pink-theme .overview-analytics{display:none!important}
+body.pink-theme .orbit-item[data-target="tradesview"],body.pink-theme .orbit-item[data-target="businessview"],body.pink-theme .orbit-item[data-target="authorview"]{display:none}
 body.pink-theme .hero h1:after{content:"";display:inline-block;width:8px;height:8px;margin-left:8px;border-radius:50%;background:#c14f8d;vertical-align:middle}
 
 /* Rose petals are strictly a Pink Paradise decoration; keep the original dashboard clean. */
@@ -373,8 +374,41 @@ $('toggleauth').onclick=()=>{mode=mode==='signin'?'signup':'signin';$('authsubmi
 $('authform').onsubmit=async e=>{e.preventDefault();$('authsubmit').disabled=true;try{const email=$('email').value.trim(),password=$('password').value;const r=mode==='signup'?await db.auth.signUp({email,password}):await db.auth.signInWithPassword({email,password});if(r.error)throw r.error;if(mode==='signup'&&!r.data.session){message('authmsg','Account created. Check your email for the confirmation link, then sign in.');}else{await start(r.data.user)}}catch(err){message('authmsg',err.message||'Authentication failed',true)}finally{$('authsubmit').disabled=false}};
 $('logout').onclick=()=>db.auth.signOut();
 db.auth.onAuthStateChange((event,session)=>{if(session?.user){setTimeout(()=>start(session.user),0)}else{user=null;$('app').classList.add('hidden');$('authscreen').classList.remove('hidden')}});
-function applyAccountTheme(u){if(!u)return;const key='dcc-theme-'+u.id;let pink=false;try{pink=localStorage.getItem(key)==='pink'}catch(e){}document.body.classList.toggle('pink-theme',pink);const b=$('themeToggle');if(b){b.innerHTML=pink?'<svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg> My Dashboard':'<svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><path d="M12 3.5 14.4 8l5 .7-3.6 3.5.9 5-4.7-2.5-4.7 2.5.9-5-3.6-3.5 5-.7L12 3.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg> Pink Paradise';b.setAttribute('aria-pressed',String(pink));b.title=pink?'Switch back to the original dashboard theme':'Switch to her pink dashboard'}}
-$('themeToggle').addEventListener('click',()=>{if(!user)return;const pink=!document.body.classList.contains('pink-theme');document.body.classList.toggle('pink-theme',pink);try{localStorage.setItem('dcc-theme-'+user.id,pink?'pink':'original')}catch(e){}const b=$('themeToggle');b.innerHTML=pink?'<svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg> My Dashboard':'<svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><path d="M12 3.5 14.4 8l5 .7-3.6 3.5.9 5-4.7-2.5-4.7 2.5.9-5-3.6-3.5 5-.7L12 3.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg> Pink Paradise';b.setAttribute('aria-pressed',String(pink));b.title=pink?'Switch back to the original dashboard theme':'Switch to her pink dashboard'});
+function applyPinkParadiseLayout(pink){
+ const cards=[...document.querySelectorAll('#visual-inspiration .visual-photo')];
+ const config=[
+  {title:'A/L Study',sub:'Plan and track study sessions',src:'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=900&q=85',alt:'Study notebook and materials',target:'tasksview',session:'al_study',task:'A/L study session'},
+  {title:'Exercise Sessions',sub:'Keep a record of movement',src:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=85',alt:'Bright modern gym and exercise space',target:'tasksview',session:'personal',task:'Exercise session'},
+  {title:'Weaving Sessions',sub:'Track time spent creating',src:'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=900&q=85',alt:'Creative handmade craft workspace',target:'tasksview',session:'personal',task:'Weaving session'},
+  {title:'My Wallet',sub:'Track money in and out',src:'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=900&q=85',alt:'Notebook and calculator for budgeting',target:'moneyview'},
+  {title:'Reminders',sub:'Keep important moments in view',src:'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=900&q=85',alt:'Calendar and planner on a desk',target:'remindersview'},
+  {title:'My Layouts',sub:'Add, edit, or remove your own spaces',src:'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=85',alt:'Bright calm workspace',target:'customlayoutsview'}
+ ];
+ cards.forEach((card,i)=>{
+  if(!card.dataset.originalMarkup){card.dataset.originalMarkup=card.innerHTML;card.dataset.originalTarget=card.dataset.target||'';card.dataset.originalAria=card.getAttribute('aria-label')||''}
+  if(pink&&config[i]){
+   const c=config[i];card.dataset.target=c.target;
+   if(c.session){card.dataset.pinkSession=c.session;card.dataset.pinkTask=c.task}else{delete card.dataset.pinkSession;delete card.dataset.pinkTask}
+   card.setAttribute('aria-label','Open '+c.title);
+   card.innerHTML='<img src="'+c.src+'" alt="'+c.alt+'" loading="lazy" decoding="async"><span class="photo-icon" aria-hidden="true">'+(['⌁','↗','✦','₨','◷','＋'][i])+'</span><span class="photo-label"><strong>'+c.title+'</strong><small>'+c.sub+'</small></span>';
+  }else if(!pink&&card.dataset.originalMarkup){
+   card.innerHTML=card.dataset.originalMarkup;card.dataset.target=card.dataset.originalTarget;card.setAttribute('aria-label',card.dataset.originalAria);delete card.dataset.pinkSession;delete card.dataset.pinkTask;
+  }
+ });
+ const hero=document.querySelector('#app .hero');
+ if(hero){
+  if(!hero.dataset.originalMarkup)hero.dataset.originalMarkup=hero.innerHTML;
+  hero.innerHTML=pink?'<div><div class="eyebrow">PINK PARADISE · YOUR PERSONAL SPACE</div><h1>A little space for you.</h1><p>Study, move, create, and keep your plans in one calm place.</p></div><span class="pill">● YOUR PRIVATE DASHBOARD</span>':hero.dataset.originalMarkup;
+ }
+ const hint=document.querySelector('#app header.top>div .hint');
+ if(hint){if(!hint.dataset.originalText)hint.dataset.originalText=hint.textContent;hint.textContent=pink?'Your personal space, at your own pace.':hint.dataset.originalText}
+ const visualTitle=document.querySelector('#visual-inspiration .visual-inspiration-head h2');
+ if(visualTitle)visualTitle.textContent=pink?'Your spaces':'Spaces for your best work';
+ const visualEyebrow=document.querySelector('#visual-inspiration .visual-inspiration-head .eyebrow');
+ if(visualEyebrow)visualEyebrow.textContent=pink?'YOUR DAY, YOUR WAY':'BUILD YOUR NEXT CHAPTER';
+}
+function applyAccountTheme(u){if(!u)return;const key='dcc-theme-'+u.id;let pink=false;try{pink=localStorage.getItem(key)==='pink'}catch(e){}document.body.classList.toggle('pink-theme',pink);applyPinkParadiseLayout(pink);const b=$('themeToggle');if(b){b.innerHTML=pink?'<svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg> My Dashboard':'<svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><path d="M12 3.5 14.4 8l5 .7-3.6 3.5.9 5-4.7-2.5-4.7 2.5.9-5-3.6-3.5 5-.7L12 3.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg> Pink Paradise';b.setAttribute('aria-pressed',String(pink));b.title=pink?'Switch back to the original dashboard theme':'Switch to her pink dashboard'}}
+$('themeToggle').addEventListener('click',()=>{if(!user)return;const pink=!document.body.classList.contains('pink-theme');document.body.classList.toggle('pink-theme',pink);applyPinkParadiseLayout(pink);try{localStorage.setItem('dcc-theme-'+user.id,pink?'pink':'original')}catch(e){}const b=$('themeToggle');b.innerHTML=pink?'<svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg> My Dashboard':'<svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><path d="M12 3.5 14.4 8l5 .7-3.6 3.5.9 5-4.7-2.5-4.7 2.5.9-5-3.6-3.5 5-.7L12 3.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg> Pink Paradise';b.setAttribute('aria-pressed',String(pink));b.title=pink?'Switch back to the original dashboard theme':'Switch to her pink dashboard'});
 async function start(u){if(!u)return;user=u;applyAccountTheme(u);$('authscreen').classList.add('hidden');$('app').classList.remove('hidden');await refresh();await loadCustomLayouts();await loadReminders().catch(e=>console.warn("Reminder load failed:",e.message));await loadCoupleSpace().catch(e=>console.warn("Our Space load failed:",e.message))}
 async function refresh(){if(!user)return;hideMessage('status');try{const [t,m,tr,r,b,c]=await Promise.all([db.from('daily_tasks').select('*').order('planned_date',{ascending:false}).limit(200),db.from('money_entries').select('*').order('entry_date',{ascending:false}).limit(200),db.from('trading_journal').select('*').order('trade_date',{ascending:false}).limit(200),db.from('weekly_reviews').select('*').order('week_start',{ascending:false}).limit(30),db.from('author_books').select('*').order('created_at',{ascending:false}),db.from('author_chapters').select('*').order('book_id').order('chapter_number')]);for(const x of [t,m,tr,r,b,c])if(x.error)throw x.error;records={tasks:t.data||[],money:m.data||[],trades:tr.data||[],reviews:r.data||[],books:b.data||[],chapters:c.data||[]};renderAuthor();render()}catch(e){message('status','Could not load records: '+e.message,true)}}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -452,7 +486,7 @@ $('saveCouplePlan').onclick=async()=>{if(!coupleSpace||!user)return;const week=$
 $('coupleWeekStart').onchange=()=>loadCoupleWeeklyPlans().catch(e=>coupleStatus(e.message,true));
 
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));['tasksview','moneyview','tradesview','reviewview','calendarview','focusview','businessview','authorview','customlayoutsview','remindersview','ourspaceview'].forEach(id=>$(id).classList.toggle('hidden',id!==b.dataset.tab))});
-document.querySelectorAll('.visual-photo[data-target]').forEach(b=>b.addEventListener('click',()=>{const target=b.dataset.target;document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x.dataset.tab===target));['tasksview','moneyview','tradesview','reviewview','calendarview','focusview','businessview','authorview','customlayoutsview','remindersview','ourspaceview'].forEach(id=>$(id).classList.toggle('hidden',id!==target));const panel=document.getElementById(target);if(panel){panel.scrollIntoView({behavior:'smooth',block:'start'});}}));
+document.querySelectorAll('.visual-photo[data-target]').forEach(b=>b.addEventListener('click',()=>{const target=b.dataset.target;document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x.dataset.tab===target));['tasksview','moneyview','tradesview','reviewview','calendarview','focusview','businessview','authorview','customlayoutsview','remindersview','ourspaceview'].forEach(id=>$(id).classList.toggle('hidden',id!==target));const panel=document.getElementById(target);if(panel){panel.scrollIntoView({behavior:'smooth',block:'start');}if(document.body.classList.contains('pink-theme')&&b.dataset.pinkTask){openModal('task');const title=$('formfields').querySelector('[name=title]');const category=$('formfields').querySelector('[name=category]');if(title)title.value=b.dataset.pinkTask;if(category)category.value=b.dataset.pinkSession||'personal';}}));
 document.querySelectorAll('.orbit-item').forEach(b=>b.onclick=()=>{const target=b.dataset.target;document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x.dataset.tab===target));['tasksview','moneyview','tradesview','reviewview','calendarview','focusview','businessview','authorview','customlayoutsview'].forEach(id=>$(id).classList.toggle('hidden',id!==target));const panel=document.getElementById(target);if(panel)panel.scrollIntoView({behavior:'smooth',block:'start'});});
 const fields={
 task:[['title','Task name','text',true],['category','Focus lane','select',true,['al_study','webforge','trading','personal','other']],['priority','Priority','select',true,['high','medium','low']],['planned_date','Date','date',true],['planned_time','Time','time',false],['duration_minutes','Planned minutes','number',false],['notes','Notes','textarea',false]],
@@ -493,7 +527,7 @@ window.deleteCustomLayout=async id=>{const l=customLayouts.find(x=>x.id===id);if
 
 /* Daily must-do checklist: editable and stored locally, with a fresh checklist each date. */
 const mustDoDefaults=['Upload M&A post','Upload Sky reel','Contact 15 customers'];
-function mustDoStorageKey(){return 'dcc-mustdo-'+day}
+function mustDoStorageKey(){return 'dcc-mustdo-'+(user?.id||'signed-out')+'-'+day}
 function readMustDos(){try{const raw=localStorage.getItem(mustDoStorageKey());if(raw){const v=JSON.parse(raw);if(Array.isArray(v))return v}}catch(e){}return mustDoDefaults.map((title,i)=>({id:'default-'+i,title,done:false}))}
 function saveMustDos(items){try{localStorage.setItem(mustDoStorageKey(),JSON.stringify(items))}catch(e){}}
 function renderMustDos(){const node=$('mustDoList');if(!node)return;const items=readMustDos();node.innerHTML=items.length?items.map(item=>'<div class="item"><div class="itemmain"><input type="checkbox" '+(item.done?'checked':'')+' onchange="toggleMustDo(\''+item.id+'\',this.checked)" aria-label="Complete '+esc(item.title)+'"><div><strong style="'+(item.done?'text-decoration:line-through;opacity:.6':'')+'">'+esc(item.title)+'</strong><small>'+(item.done?'Completed':'Today')+'</small></div></div><button aria-label="Remove '+esc(item.title)+'" onclick="removeMustDo(\''+item.id+'\')">− Remove</button></div>').join(''):'<div class="empty">Your must-do list is empty. Add the tasks you want to focus on today.</div>';const add=$('addMustDo');if(add&&!add.dataset.ready){add.dataset.ready='1';add.onclick=()=>{const title=prompt('What must you do today?');if(!title||!title.trim())return;const list=readMustDos();list.push({id:'todo-'+Date.now(),title:title.trim().slice(0,140),done:false});saveMustDos(list);renderMustDos()}}}
@@ -502,7 +536,7 @@ window.removeMustDo=id=>{const items=readMustDos().filter(x=>x.id!==id);saveMust
 
 
 /* Custom reminders: persist per signed-in browser; push delivery needs separate server setup. */
-const REMINDER_KEY='dcc-reminders-v1';
+// Reminder records are stored per signed-in account in Supabase; avoid importing browser-wide legacy reminders across users.
 const VAPID_PUBLIC_KEY='BA4bXdya-UJ3SEniicAHfWUpHeq1Jwe9rjw_Tf-O3mLFn6Uog-kDWF32fwan389qZiDgUV21lertRfeSIJf8S6Q'; // Add the generated public VAPID key here after configuring the matching private key in Supabase secrets.
 let reminderCache=[];
 function localDateTimeToISO(date,time){return new Date(date+'T'+time+':00').toISOString()}
@@ -515,13 +549,6 @@ async function loadReminders(){
  const {data,error}=await db.from('reminders').select('*').eq('user_id',user.id).order('reminder_at',{ascending:true});
  if(error)throw error;
  reminderCache=(data||[]).map(r=>({...r,id:r.id,title:r.title,...reminderDateTime(r.reminder_at),repeat:r.repeat_rule,done:r.completed}));
- // Preserve older browser-only reminders by importing them once for this account.
- const legacy=(()=>{try{return JSON.parse(localStorage.getItem(REMINDER_KEY)||'[]')}catch(_){return []}})();
- if(legacy.length){
-  for(const r of legacy){if(!r.title||!r.date||!r.time)continue;const payload={user_id:user.id,title:r.title,reminder_at:localDateTimeToISO(r.date,r.time),repeat_rule:['daily','weekly'].includes(r.repeat)?r.repeat:'never',completed:!!r.done};const {error:ie}=await db.from('reminders').insert(payload);if(ie)console.warn('Legacy reminder import skipped:',ie.message)}
-  localStorage.removeItem(REMINDER_KEY);
-  const fresh=await db.from('reminders').select('*').eq('user_id',user.id).order('reminder_at',{ascending:true});if(!fresh.error)reminderCache=(fresh.data||[]).map(r=>({...r,id:r.id,title:r.title,...reminderDateTime(r.reminder_at),repeat:r.repeat_rule,done:r.completed}));
- }
  renderReminders();
 }
 function renderReminders(){

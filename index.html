@@ -423,7 +423,7 @@ window.deleteReminder=async id=>{if(!confirm('Delete this reminder?'))return;con
 window.toggleReminder=async(id,done)=>{const {error}=await db.from('reminders').update({completed:done,updated_at:new Date().toISOString()}).eq('id',id).eq('user_id',user.id);if(error){showReminderStatus('Could not update reminder: '+error.message,true);return}await loadReminders()};
 async function enableReminderNotifications(){
  if(!user){showReminderStatus('Sign in before enabling notifications.',true);return}
- if(!('serviceWorker'in navigator)||!('PushManager'in window)||!('Notification'in window)){showReminderStatus('This browser does not support web push. On iPhone, add this site to your Home Screen and open the installed app.',true);return}
+ if(!('serviceWorker'in navigator)||!('PushManager'in window)||!('Notification'in window)){showReminderStatus('Web Push is unavailable in this browser window. On iPhone, open this site in Safari, use Share → Add to Home Screen, then launch the Home Screen app. If already installed, check iOS/iPadOS 16.4 or later and reopen it from its icon.',true);return}
  if(!VAPID_PUBLIC_KEY){showReminderStatus('Your reminder data is saved, but push delivery is not configured yet: the server VAPID keys and matching public key must be added first.',true);return}
  try{
   const permission=await Notification.requestPermission();if(permission!=='granted'){showReminderStatus('Notifications are not allowed. Enable them in iPhone Settings and try again.',true);return}
@@ -438,27 +438,6 @@ async function enableReminderNotifications(){
 $('addReminderBtn')?.addEventListener('click',()=>reminderForm(null));
 $('enableReminderNotifications')?.addEventListener('click',enableReminderNotifications);
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.tab==='remindersview')loadReminders().catch(e=>showReminderStatus('Could not load reminders: '+e.message,true))}));
-
-function getReminders(){try{return JSON.parse(localStorage.getItem(REMINDER_KEY)||'[]')}catch(e){return []}}
-function saveReminders(list){localStorage.setItem(REMINDER_KEY,JSON.stringify(list))}
-function renderReminders(){
- const node=$('reminderList');if(!node)return;
- const list=getReminders().sort((a,b)=>(a.date+'T'+a.time).localeCompare(b.date+'T'+b.time));
- node.innerHTML=list.length?list.map(r=>'<div class="item"><div class="itemmain"><input type="checkbox" '+(r.done?'checked':'')+' onchange="toggleReminder(\''+r.id+'\',this.checked)" aria-label="Complete reminder"><div><strong style="'+(r.done?'text-decoration:line-through;opacity:.6':'')+'">'+esc(r.title)+'</strong><small>'+esc(r.date)+' at '+esc(r.time)+' · '+esc(r.repeat||'Never')+(r.done?' · Completed':'')+'</small></div></div><div class="actions"><button onclick="editReminder(\''+r.id+'\')">Edit</button><button onclick="deleteReminder(\''+r.id+'\')">Delete</button></div></div>').join(''):'<div class="empty">No reminders yet. Tap ＋ Add reminder to create your first one.</div>';
-}
-function reminderForm(existing){
- const title=prompt('Reminder title:',existing?.title||'');if(title===null||!title.trim())return;
- const date=prompt('Date (YYYY-MM-DD):',existing?.date||new Date().toISOString().slice(0,10));if(date===null||!/^\d{4}-\d{2}-\d{2}$/.test(date)){alert('Please enter date as YYYY-MM-DD.');return}
- const time=prompt('Time (24-hour HH:MM):',existing?.time||'08:00');if(time===null||!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)){alert('Please enter time as HH:MM, e.g. 18:30.');return}
- const repeat=prompt('Repeat: never, daily, weekly',existing?.repeat||'never');if(repeat===null)return;const rep=repeat.trim().toLowerCase();if(!['never','daily','weekly'].includes(rep)){alert('Repeat must be never, daily, or weekly.');return}
- const list=getReminders();if(existing){const i=list.findIndex(x=>x.id===existing.id);if(i>=0)list[i]={...list[i],title:title.trim(),date,time,repeat:rep}}else list.push({id:'rem-'+Date.now(),title:title.trim(),date,time,repeat:rep,done:false});
- saveReminders(list);renderReminders();
-}
-window.editReminder=id=>{const r=getReminders().find(x=>x.id===id);if(r)reminderForm(r)};
-window.deleteReminder=id=>{if(!confirm('Delete this reminder?'))return;saveReminders(getReminders().filter(x=>x.id!==id));renderReminders()};
-window.toggleReminder=(id,done)=>{const list=getReminders();const r=list.find(x=>x.id===id);if(r)r.done=done;saveReminders(list);renderReminders()};
-$('addReminderBtn')?.addEventListener('click',()=>reminderForm(null));
-document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.tab==='remindersview')renderReminders()}));
 
 drawTimer();(async()=>{const {data}=await db.auth.getSession();if(data.session)start(data.session.user)})();
 </script><script>document.getElementById("tradeNowButton")?.addEventListener("click",function(e){e.preventDefault();let leftPage=false;const fallback=document.getElementById("tradeWebFallback");const onHide=()=>{if(document.hidden)leftPage=true;};document.addEventListener("visibilitychange",onHide,{once:true});window.location.href="tradingview://";window.setTimeout(()=>{document.removeEventListener("visibilitychange",onHide);if(!leftPage&&fallback){fallback.hidden=false;fallback.style.display="inline-block";fallback.style.marginTop="10px";}},1400);});</script></body></html>

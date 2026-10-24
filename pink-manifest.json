@@ -1,0 +1,19 @@
+{
+  "name": "Pink Paradise",
+  "short_name": "Pink Paradise",
+  "description": "A personal pastel-pink space for study, wellness, weaving and daily plans.",
+  "start_url": "./pink-paradise.html?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fff6fb",
+  "theme_color": "#f7c7dc",
+  "icons": [
+    {
+      "src": "./pink-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -297,6 +297,7 @@ body.searching .item.search-hidden{display:none!important}
 const SUPABASE_URL='https://yqwdxfkjhvoidtwhntsu.supabase.co';
 const SUPABASE_KEY='sb_publishable_QYMf7DHyiLimhiXcM3pI_Q_YEmusJiH';
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+if('serviceWorker' in navigator && location.protocol==='https:'){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('Push service worker registration failed:',err)));}
 const $=id=>document.getElementById(id);let user=null,mode='signin',recordType='',records={tasks:[],money:[],trades:[],reviews:[],books:[],chapters:[]};
 const today=new Date();const day=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
 $('today').textContent=today.toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric',year:'numeric'});const monday=new Date(today);monday.setDate(monday.getDate()-((monday.getDay()+6)%7));$('weekstart').value=monday.getFullYear()+'-'+String(monday.getMonth()+1).padStart(2,'0')+'-'+String(monday.getDate()).padStart(2,'0');

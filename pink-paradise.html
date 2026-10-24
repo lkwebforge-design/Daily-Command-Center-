@@ -294,7 +294,22 @@ body.pink-theme .alert-mark.green{background:#e77fb3}
 /* Her mode keeps her planner focused on personal routines rather than trading/business tools. */
 body.pink-theme .tabs button[data-tab="tradesview"],body.pink-theme .tabs button[data-tab="businessview"],body.pink-theme .tabs button[data-tab="authorview"]{display:none}
 body.pink-theme #tradesview,body.pink-theme #businessview,body.pink-theme #authorview{display:none!important}
-body.pink-theme .orbit-section,body.pink-theme main#app>section.grid,body.pink-theme .overview-analytics{display:none!important}
+body.pink-theme main#app>section.grid{display:none!important}
+body.pink-theme .overview-analytics{display:grid!important;grid-template-columns:minmax(0,1.45fr) minmax(240px,.8fr);gap:12px;margin-top:14px}
+body.pink-theme .orbit-section{display:block!important}
+body.pink-theme .overview-analytics .card{background:#fffafd;border-color:#f0c8dd;color:#63374e}
+body.pink-theme .weekly-chart{border-bottom-color:#f1c9dc}
+body.pink-theme .week-bar{background:linear-gradient(180deg,#f5acd0,#c65a98)}
+body.pink-theme .week-day strong{color:#854965}.week-day small{color:#b17b98}
+body.pink-theme .chart-legend{color:#a66f8d}.pink-theme .chart-legend i{background:#d95b9b}
+body.pink-theme .orbit-item[data-target="tradesview"],body.pink-theme .orbit-item[data-target="businessview"],body.pink-theme .orbit-item[data-target="authorview"]{display:none}
+body.pink-theme .pink-progress-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0 18px}
+body.pink-theme .pink-progress-card{display:flex;flex-direction:column;align-items:center;gap:7px;padding:13px 6px;border:1px solid #f0c8dd;border-radius:16px;background:#fffafd;color:#854965;min-width:0}
+body.pink-theme .pink-progress-ring{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#d95b9b var(--pct,0%),#f7dfeb 0);position:relative}
+body.pink-theme .pink-progress-ring:before{content:"";position:absolute;inset:6px;background:#fffafd;border-radius:50%}
+body.pink-theme .pink-progress-ring strong{position:relative;font-size:12px;color:#b94c88}
+body.pink-theme .pink-progress-card small{font-size:11px;text-align:center}
+@media(max-width:520px){body.pink-theme .overview-analytics{grid-template-columns:1fr}body.pink-theme .pink-progress-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 body.pink-theme .orbit-item[data-target="tradesview"],body.pink-theme .orbit-item[data-target="businessview"],body.pink-theme .orbit-item[data-target="authorview"]{display:none}
 body.pink-theme .hero h1:after{content:"";display:inline-block;width:8px;height:8px;margin-left:8px;border-radius:50%;background:#c14f8d;vertical-align:middle}
 
@@ -325,7 +340,14 @@ body.pink-theme #dcc-rose-petal-layer{display:block}
 <button class="visual-photo author-photo" type="button" data-target="authorview" aria-label="Open Author Command Center"><img src="https://images.unsplash.com/photo-1519682337058-a94d519337bc?auto=format&fit=crop&w=900&q=85" alt="Moody modern creative writing workspace with books and notebook" loading="lazy" decoding="async"><span class="photo-icon" aria-hidden="true">↗</span><span class="photo-label"><strong>Author Studio</strong><small>Write · Publish · Grow</small></span></button>
 <button class="visual-photo pink-youtube-card" type="button" aria-label="Open YouTube"><img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=700&q=80" alt="Video and learning" loading="lazy" decoding="async"><span class="photo-icon" aria-hidden="true">▶</span><span class="photo-label"><strong>YouTube</strong><small>Watch videos and learn</small></span></button>
 </div></section>
-<section class="orbit-section"><div class="sectionhead"><div><div class="eyebrow">YOUR LIFE · ONE COMMAND CENTER</div><h2>All sections</h2></div><span class="hint">Tap a circle to open</span></div><div class="orbit-grid">
+<section class="pink-progress-grid" id="pinkProgressGrid" aria-label="Pink Paradise progress">
+<div class="pink-progress-card"><span class="pink-progress-ring" id="pinkStudyRing" style="--pct:0%"><strong id="pinkStudyPct">0%</strong></span><strong>A/L Study</strong><small id="pinkStudyDetail">0 sessions today</small></div>
+<div class="pink-progress-card"><span class="pink-progress-ring" id="pinkExerciseRing" style="--pct:0%"><strong id="pinkExercisePct">0%</strong></span><strong>Exercise</strong><small id="pinkExerciseDetail">Daily movement</small></div>
+<div class="pink-progress-card"><span class="pink-progress-ring" id="pinkWeavingRing" style="--pct:0%"><strong id="pinkWeavingPct">0%</strong></span><strong>Weaving</strong><small id="pinkWeavingDetail">Creative sessions</small></div>
+<div class="pink-progress-card"><span class="pink-progress-ring" id="pinkWalletRing" style="--pct:0%"><strong id="pinkWalletPct">₨0</strong></span><strong>My Wallet</strong><small id="pinkWalletDetail">Income and expenses</small></div>
+<div class="pink-progress-card"><span class="pink-progress-ring" id="pinkCalendarRing" style="--pct:0%"><strong id="pinkCalendarPct">0</strong></span><strong>Calendar</strong><small id="pinkCalendarDetail">Scheduled items</small></div>
+<div class="pink-progress-card"><span class="pink-progress-ring" id="pinkFocusRing" style="--pct:0%"><strong id="pinkFocusPct">0%</strong></span><strong>Focus</strong><small id="pinkFocusDetail">Focus sessions</small></div>
+</section><section class="orbit-section"><div class="sectionhead"><div><div class="eyebrow">YOUR LIFE · ONE COMMAND CENTER</div><h2>All sections</h2></div><span class="hint">Tap a circle to open</span></div><div class="orbit-grid">
 <button class="orbit-item" data-target="tasksview"><span class="orbit-ring" data-orbit-ring="study" style="--ring:#67e8f9"><span data-orbit-value="study">0%</span></span><strong>A/L Study</strong></button>
 <button class="orbit-item" data-target="tradesview"><span class="orbit-ring" data-orbit-ring="trading" style="--ring:#a78bfa"><span data-orbit-value="trading">0%</span></span><strong>Trading</strong></button>
 <button class="orbit-item" data-target="moneyview"><span class="orbit-ring" data-orbit-ring="wallet" style="--ring:#67e8f9"><span data-orbit-value="wallet">₨0</span></span><strong>My Wallet</strong></button>
@@ -401,12 +423,28 @@ function defaultPinkRows(){return [{time:'8–10 AM',days:['Study','Study','Stud
 function renderPinkPlanner(){const shell=$('pinkCalendarShell');if(!shell||!user)return;const today=new Date(),monday=new Date(today);monday.setDate(today.getDate()-((today.getDay()+6)%7));$('pinkCalendarTitle').textContent=monday.toLocaleDateString(undefined,{month:'short',day:'numeric'})+' – '+new Date(monday.getTime()+6*86400000).toLocaleDateString(undefined,{month:'short',day:'numeric'});$('pinkCalendarDays').innerHTML=Array.from({length:7},(_,i)=>{const d=new Date(monday);d.setDate(monday.getDate()+i);return '<div class="pink-calendar-day '+(d.toDateString()===today.toDateString()?'today':'')+'>'+['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][i]+'<strong>'+d.getDate()+'</strong></div>'}).join('');let rows;try{rows=JSON.parse(localStorage.getItem(pinkTimetableKey())||'null')}catch(e){}if(!Array.isArray(rows))rows=defaultPinkRows();$('pinkTimetableBody').innerHTML=rows.map((r,ri)=>'<tr><th><button type="button" onclick="editPinkTime('+ri+')">'+esc(r.time)+'</button></th>'+r.days.map((v,di)=>'<td><button type="button" onclick="editPinkCell('+ri+','+di+')">'+esc(v||'+ Add')+'</button></td>').join('')+'</tr>').join('')}
 window.editPinkCell=(ri,di)=>{let rows;try{rows=JSON.parse(localStorage.getItem(pinkTimetableKey())||'null')}catch(e){}if(!Array.isArray(rows))rows=defaultPinkRows();const v=prompt('Activity for '+['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'][di],rows[ri].days[di]||'');if(v===null)return;rows[ri].days[di]=v.trim();localStorage.setItem(pinkTimetableKey(),JSON.stringify(rows));renderPinkPlanner()}
 window.editPinkTime=ri=>{let rows;try{rows=JSON.parse(localStorage.getItem(pinkTimetableKey())||'null')}catch(e){}if(!Array.isArray(rows))rows=defaultPinkRows();const v=prompt('Edit time slot',rows[ri].time);if(v===null||!v.trim())return;rows[ri].time=v.trim();localStorage.setItem(pinkTimetableKey(),JSON.stringify(rows));renderPinkPlanner()}
+function updatePinkProgress(){
+ if(!user)return;
+ const all=records.tasks||[];
+ const study=all.filter(t=>/a\/l study|study session|study/i.test(t.title||t.task||t.name||''));
+ const exercise=all.filter(t=>/exercise|workout|gym|fitness/i.test(t.title||t.task||t.name||''));
+ const weaving=all.filter(t=>/weaving/i.test(t.title||t.task||t.name||''));
+ const set=(name,val,detail,progress)=>{const el=$('pink'+name+'Pct'),ring=$('pink'+name+'Ring'),d=$('pink'+name+'Detail');if(el)el.textContent=val;if(ring)ring.style.setProperty('--pct',Math.max(0,Math.min(100,progress||0))+'%');if(d)d.textContent=detail};
+ const sessionPct=a=>a.length?Math.round(a.filter(t=>t.completed||t.done||t.is_completed).length/a.length*100):0;
+ set('Study',sessionPct(study)+'%',study.length+' recorded tasks',sessionPct(study));
+ set('Exercise',sessionPct(exercise)+'%',exercise.length+' recorded sessions',sessionPct(exercise));
+ set('Weaving',sessionPct(weaving)+'%',weaving.length+' recorded sessions',sessionPct(weaving));
+ const money=records.money||[];const net=money.reduce((n,x)=>n+Number(x.amount||0)*(String(x.type||x.kind||'').toLowerCase().includes('expense')?-1:1),0);
+ set('Wallet','₨'+Math.round(net).toLocaleString(),money.length+' transactions',money.length?100:0);
+ const cal=document.querySelectorAll('#calendarlist .item').length;set('Calendar',String(cal),'Calendar entries',Math.min(100,cal*10));
+ set('Focus','0%','Focus sessions',0);
+}
 function applyPinkParadiseLayout(pink){
  const cards=[...document.querySelectorAll('#visual-inspiration .visual-photo')];
  const config=[
   {title:'A/L Study',sub:'Plan and track study sessions',src:'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=900&q=85',alt:'Study notebook and materials',target:'tasksview',session:'al_study',task:'A/L study session'},
   {title:'Exercise Sessions',sub:'Keep a record of movement',src:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=85',alt:'Bright modern gym and exercise space',target:'tasksview',session:'personal',task:'Exercise session'},
-  {title:'Weaving Sessions',sub:'Track time spent creating',src:'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=900&q=85',alt:'Creative handmade craft workspace',target:'tasksview',session:'personal',task:'Weaving session'},
+  {title:'Weaving Sessions',sub:'Track time spent creating',src:'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=900&q=85',alt:'Hands weaving yarn through a textile loom, creating woven fabric',target:'tasksview',session:'personal',task:'Weaving session'},
   {title:'My Wallet',sub:'Track money in and out',src:'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=900&q=85',alt:'Notebook and calculator for budgeting',target:'moneyview'},
   {title:'Reminders',sub:'Keep important moments in view',src:'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=900&q=85',alt:'Calendar and planner on a desk',target:'remindersview'},
   {title:'My Layouts',sub:'Add, edit, or remove your own spaces',src:'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=85',alt:'Bright calm workspace',target:'customlayoutsview'}
@@ -434,7 +472,7 @@ function applyPinkParadiseLayout(pink){
  const visualEyebrow=document.querySelector('#visual-inspiration .visual-inspiration-head .eyebrow');
  if(visualEyebrow)visualEyebrow.textContent=pink?'YOUR DAY, YOUR WAY':'BUILD YOUR NEXT CHAPTER';
  const yt=document.querySelector('.pink-youtube-card');if(yt){yt.style.display=pink?'block':'none';yt.onclick=()=>window.open('https://www.youtube.com/','_blank','noopener,noreferrer')}
- const shell=$('pinkCalendarShell');if(shell)shell.style.display=pink?'block':'none';if(pink)renderPinkPlanner();
+ const shell=$('pinkCalendarShell');if(shell)shell.style.display=pink?'block':'none';if(pink){renderPinkPlanner();updatePinkProgress()}
 }
 function applyAccountTheme(u){if(!u)return;const key='dcc-theme-'+u.id;let pink=document.querySelector('meta[name="dcc-mode"]')?.content==='pink';try{if(!pink)pink=localStorage.getItem(key)==='pink'}catch(e){}document.body.classList.toggle('pink-theme',pink);applyPinkParadiseLayout(pink);const b=$('themeToggle');if(b){b.innerHTML=pink?'<svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg> My Dashboard':'<svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><path d="M12 3.5 14.4 8l5 .7-3.6 3.5.9 5-4.7-2.5-4.7 2.5.9-5-3.6-3.5 5-.7L12 3.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg> Pink Paradise';b.setAttribute('aria-pressed',String(pink));b.title=pink?'Switch back to the original dashboard theme':'Switch to her pink dashboard'}}
 $('themeToggle').addEventListener('click',()=>{if(!user)return;const pink=!document.body.classList.contains('pink-theme');document.body.classList.toggle('pink-theme',pink);applyPinkParadiseLayout(pink);try{localStorage.setItem('dcc-theme-'+user.id,pink?'pink':'original')}catch(e){}const b=$('themeToggle');b.innerHTML=pink?'<svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg> My Dashboard':'<svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><path d="M12 3.5 14.4 8l5 .7-3.6 3.5.9 5-4.7-2.5-4.7 2.5.9-5-3.6-3.5 5-.7L12 3.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg> Pink Paradise';b.setAttribute('aria-pressed',String(pink));b.title=pink?'Switch back to the original dashboard theme':'Switch to her pink dashboard'});

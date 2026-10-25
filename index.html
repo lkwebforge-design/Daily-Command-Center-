@@ -547,6 +547,7 @@ async function loadCoupleSpace(){
  if(coupleMessagesTimer)clearInterval(coupleMessagesTimer);
  coupleMessagesTimer=setInterval(()=>{if(coupleUser&&coupleSpace&&!$('ourspaceview').classList.contains('hidden'))loadCoupleMessages().catch(()=>{})},12000);
 }
+/* Chat sender labels refresh: current signed-in member = You; other member = Baby. */
 async function loadCoupleMessages(){
  if(!coupleSpace)return;
  const {data,error}=await coupleDb.from('couple_messages').select('id,sender_id,body,created_at').eq('space_id',coupleSpace.id).order('created_at',{ascending:true}).limit(100);

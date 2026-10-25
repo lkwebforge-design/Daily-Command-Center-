@@ -620,7 +620,7 @@ async function loadCoupleSpace(){
  const {data:members,error}=await db.from('couple_members').select('space_id').eq('user_id',user.id).limit(1);
  if(error)throw error;
  coupleSpace=null;
- if(members&&members.length){const {data:space,error:se}=await db.from('couple_spaces').select('id,name,invite_code').eq('id',members[0].space_id).single();if(se)throw se;coupleSpace=space}
+ if(members&&members.length){const {data:space,error:se}=await db.from('couple_spaces').select('id,name,invite_code,created_by').eq('id',members[0].space_id).single();if(se)throw se;coupleSpace=space}
  $('coupleSetup').classList.toggle('hidden',!!coupleSpace);
  $('coupleSpaceContent').classList.toggle('hidden',!coupleSpace);
  if(!coupleSpace){if(coupleMessagesTimer){clearInterval(coupleMessagesTimer);coupleMessagesTimer=null}return}
@@ -636,7 +636,7 @@ async function loadCoupleMessages(){
  const {data,error}=await db.from('couple_messages').select('id,sender_id,body,created_at').eq('space_id',coupleSpace.id).order('created_at',{ascending:true}).limit(100);
  if(error)throw error;
  const node=$('coupleChatMessages');
- node.innerHTML=(data||[]).map(m=>'<div class="item" style="display:block;background:'+(m.sender_id===user.id?'#fce7f3':'#fff')+';color:#4b2440;border-color:#f3c4da"><div class="rowline"><strong>'+(m.sender_id===user.id?'You':'Baby')+'</strong><small>'+esc(new Date(m.created_at).toLocaleString())+'</small></div><div style="white-space:pre-wrap;overflow-wrap:anywhere;margin-top:5px">'+esc(m.body)+'</div></div>').join('')||'<div class="empty">No messages yet. Send the first little check-in</div>';
+ node.innerHTML=(data||[]).map(m=>'<div class="item" style="display:block;background:'+(m.sender_id!==coupleSpace.created_by?'#fce7f3':'#fff')+';color:#4b2440;border-color:#f3c4da"><div class="rowline"><strong>'+(m.sender_id!==coupleSpace.created_by?'You':'Baby')+'</strong><small>'+esc(new Date(m.created_at).toLocaleString())+'</small></div><div style="white-space:pre-wrap;overflow-wrap:anywhere;margin-top:5px">'+esc(m.body)+'</div></div>').join('')||'<div class="empty">No messages yet. Send the first little check-in</div>';
  node.scrollTop=node.scrollHeight;
 }
 async function loadCoupleGoals(){

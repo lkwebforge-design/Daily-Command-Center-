@@ -652,10 +652,14 @@ async function loadCoupleSpace(){
 /* Chat sender labels refresh: current signed-in member = You; other member = Baby. */
 async function loadCoupleMessages(){
  if(!coupleSpace)return;
+ /* Read the active Our Space session directly so both pages use the same dedicated identity. */
+ const {data:authData,error:authError}=await coupleDb.auth.getUser();
+ if(authError)throw authError;
+ const currentSenderId=String(authData?.user?.id||coupleUser?.id||'').trim().toLowerCase();
  const {data,error}=await coupleDb.from('couple_messages').select('id,sender_id,body,created_at').eq('space_id',coupleSpace.id).order('created_at',{ascending:true}).limit(100);
  if(error)throw error;
  const node=$('coupleChatMessages');
- node.innerHTML=(data||[]).map(m=>'<div class="item" style="display:block;background:'+(m.sender_id===coupleUser.id?'#fce7f3':'#fff')+';color:#4b2440;border-color:#f3c4da"><div class="rowline"><strong>'+(m.sender_id===coupleUser.id?'You':'Baby')+'</strong><small>'+esc(new Date(m.created_at).toLocaleString())+'</small></div><div style="white-space:pre-wrap;overflow-wrap:anywhere;margin-top:5px">'+esc(m.body)+'</div></div>').join('')||'<div class="empty">No messages yet. Send the first little check-in</div>';
+ node.innerHTML=(data||[]).map(m=>{const own=String(m.sender_id||'').trim().toLowerCase()===currentSenderId;return '<div class="item" style="display:block;background:'+(own?'#fce7f3':'#fff')+';color:#4b2440;border-color:#f3c4da"><div class="rowline"><strong>'+(own?'You':'Baby')+'</strong><small>'+esc(new Date(m.created_at).toLocaleString())+'</small></div><div style="white-space:pre-wrap;overflow-wrap:anywhere;margin-top:5px">'+esc(m.body)+'</div></div>'}).join('')||'<div class="empty">No messages yet. Send the first little check-in</div>';
  node.scrollTop=node.scrollHeight;
 }
 async function loadCoupleGoals(){

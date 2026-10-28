@@ -774,7 +774,8 @@ async function enableReminderNotifications(){
   const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:key});
   const {error}=await db.from('push_subscriptions').upsert({user_id:user.id,endpoint:sub.endpoint,subscription:sub.toJSON(),updated_at:new Date().toISOString()},{onConflict:'endpoint'});
   if(error)throw error;
-  showReminderStatus('Notifications enabled for this device.'); 
+  await reg.showNotification('Pink Paradise notification test',{body:'Your iPhone can display Pink Paradise notifications. We still need to connect the server sender for automatic scheduled reminders.',icon:'https://lkwebforge-design.github.io/Daily-Command-Center-/pink-icon.svg',badge:'https://lkwebforge-design.github.io/Daily-Command-Center-/pink-icon.svg',data:{url:'https://lkwebforge-design.github.io/Daily-Command-Center-/pink-paradise.html?source=notification#reminders'},tag:'pink-paradise-test'});
+  showReminderStatus('Test notification sent and this device subscription was saved. Automatic scheduled reminders still need the Pink Paradise push sender configured.'); 
  }catch(e){showReminderStatus('Could not enable notifications: '+(e.message||e),true)}
 }
 $('addReminderBtn')?.addEventListener('click',()=>reminderForm(null));

@@ -730,7 +730,7 @@ window.removeMustDo=id=>{const items=readMustDos().filter(x=>x.id!==id);saveMust
 
 /* Custom reminders: persist per signed-in browser; push delivery needs separate server setup. */
 // Reminder records are stored per signed-in account in Supabase; avoid importing browser-wide legacy reminders across users.
-const VAPID_PUBLIC_KEY='BKiNezaI2mpuCE3r7aDxqP-YR5mPSugc-Sw4D10gu2CVuKbeSu5L501MTND9I3YB-Rs7xOy348zSqeF_RDufvIY'; // Add the generated public VAPID key here after configuring the matching private key in Supabase secrets.
+const VAPID_PUBLIC_KEY='BGR5fr2wtZm4eaklOoNYi2VLIMIxfWQ8MfHaASVTE9vjXoGhuj9ivW3eALOmfeXq_h0cT8hqVxgrXmcZZCm434Q'; // Add the generated public VAPID key here after configuring the matching private key in Supabase secrets.
 let reminderCache=[];
 function localDateTimeToISO(date,time){return new Date(date+'T'+time+':00').toISOString()}
 function reminderDateTime(iso){const d=new Date(iso);return {date:d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'),time:String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}}

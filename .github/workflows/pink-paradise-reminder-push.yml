@@ -1,0 +1,28 @@
+name: Pink Paradise Reminder Push
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  send-pink-paradise-reminders:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Pink Paradise reminder function
+        env:
+          PINK_PARADISE_CRON_SECRET: ${{ secrets.PINK_PARADISE_CRON_SECRET }}
+        run: |
+          if [ -z "$PINK_PARADISE_CRON_SECRET" ]; then
+            echo "Missing repository secret PINK_PARADISE_CRON_SECRET"
+            exit 1
+          fi
+          curl --fail-with-body --silent --show-error \
+            --request POST \
+            --url "https://vwaeevlgatximrfliwcs.supabase.co/functions/v1/pink-paradise-send-reminders" \
+            --header "Content-Type: application/json" \
+            --header "x-cron-secret: $PINK_PARADISE_CRON_SECRET" \
+            --data '{}'
